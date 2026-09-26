@@ -13,6 +13,8 @@ import java.text.DecimalFormatSymbols;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.ResolverStyle;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.UUID;
 import java.util.Locale;
 
 import br.ufal.ic.p2.wepayu.Exception.AtributoNaoExisteException;
+import br.ufal.ic.p2.wepayu.Exception.DataInicialAposFinalException;
 import br.ufal.ic.p2.wepayu.Exception.DataInvalidaException;
 import br.ufal.ic.p2.wepayu.Exception.EmpregadoNaoExisteException;
 import br.ufal.ic.p2.wepayu.Exception.HoraNaoPositivaException;
@@ -119,7 +122,10 @@ public class Sistema {
 			throw new NaoEhHoristaException();
 		
 		Horista hor = (Horista)empregado;
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy");
+		DateTimeFormatter dtf = new DateTimeFormatterBuilder()
+			    .appendPattern("d/M/uuuu")
+			    .toFormatter()
+			    .withResolverStyle(ResolverStyle.STRICT);
 		LocalDate dataI = null, dataF = null;
 		
 		try {
@@ -133,6 +139,10 @@ public class Sistema {
 		} catch (DateTimeException e) {
 			throw new DataInvalidaException("final ");
 		}
+		
+		if(dataI.isAfter(dataF))
+			throw new DataInicialAposFinalException();
+			
 		Double horas = 0.0;
 		for(Map.Entry<String, Double> entry : hor.getCartaoDePonto().entrySet()) {
 			LocalDate data = LocalDate.parse(entry.getKey(), dtf);
@@ -237,7 +247,10 @@ public class Sistema {
 		}
 		
 		try {
-			LocalDate.parse(data, DateTimeFormatter.ofPattern("d/M/yyyy"));
+			LocalDate.parse(data, new DateTimeFormatterBuilder()
+				    .appendPattern("d/M/uuuu")
+				    .toFormatter()
+				    .withResolverStyle(ResolverStyle.STRICT));
 		} catch (DateTimeException e) {
 			throw new DataInvalidaException("");
 		}
@@ -251,7 +264,6 @@ public class Sistema {
 		Map<String, Double> map = hor.getCartaoDePonto();
 		map.put(data, horasAdd);
 	}
-	
 	
 	//Remover empregado pelo id
 	public void removerEmpregado(String emp) throws Exception{
