@@ -7,7 +7,7 @@ public class NuloException extends Exception {
 	}
 	
 	private static String montarMensagem(String atributo) {
-		if(atributo.equals("Comissao")) {
+		if(atributo.equals("Comissao") || atributo.equals("Identificacao do empregado")) {
 			return atributo + " nao pode ser nula.";
 		}
 		else {

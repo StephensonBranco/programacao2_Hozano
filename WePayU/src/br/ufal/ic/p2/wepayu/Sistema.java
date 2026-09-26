@@ -8,15 +8,24 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Locale;
 
 import br.ufal.ic.p2.wepayu.Exception.AtributoNaoExisteException;
+import br.ufal.ic.p2.wepayu.Exception.DataInvalidaException;
 import br.ufal.ic.p2.wepayu.Exception.EmpregadoNaoExisteException;
+import br.ufal.ic.p2.wepayu.Exception.HoraNaoPositivaException;
 import br.ufal.ic.p2.wepayu.Exception.IdentificacaoNulaException;
+import br.ufal.ic.p2.wepayu.Exception.NaoEhHoristaException;
+import br.ufal.ic.p2.wepayu.Exception.NaoHaEmpregadoNomeException;
 import br.ufal.ic.p2.wepayu.Exception.NuloException;
 import br.ufal.ic.p2.wepayu.Exception.ValorNegativoException;
 import br.ufal.ic.p2.wepayu.Exception.ValorNaoNumericoException;
@@ -24,21 +33,26 @@ import br.ufal.ic.p2.wepayu.Exception.TipoInvalidoException;
 import br.ufal.ic.p2.wepayu.Exception.TipoNaoAplicavelException;
 import br.ufal.ic.p2.wepayu.models.Comissionado;
 import br.ufal.ic.p2.wepayu.models.Empregado;
+import br.ufal.ic.p2.wepayu.models.Horista;
 
 public class Sistema {
+	
 	private static final File ARQUIVO = new File("XML/dados.xml");
 	private Map<String, Empregado> empregados;
+	
 	
 	//Inicia o sistema pegando os dados salvos no XML
 	public Sistema() { 
 		empregados = decoder();
 	}
 	
+	
 	//Apaga o que tiver no Map empregados e apaga o XML
 	public void zerarSistema() {
 		empregados.clear();
 		ARQUIVO.delete();
 	}
+	
 	
 	//Salva o que tem em empregados no dados.XML
 	public void encerrarSistema() {
@@ -82,6 +96,59 @@ public class Sistema {
 			return sindicalizado;
 		}
 	}
+	
+	//Pega o empregado baseado no nome (se for repetido, ele pega baseado no indice)
+	public String getEmpregadoPorNome(String nome, int indice) throws Exception{
+		int idx = 0;
+		
+		for(Map.Entry<String, Empregado> entry : empregados.entrySet()) {
+			if(entry.getValue().getNome().equals(nome)) {
+				++idx;
+				if(idx == indice) {
+					return entry.getKey();
+				}
+			}
+		}
+		throw new NaoHaEmpregadoNomeException();
+	}
+	
+	//pegar quantas horas alguém trabalhou
+	public String getHorasTrabalhadas(String emp, String dataInicial, String dataFinal, boolean extras) throws Exception{
+		Horista hor = (Horista)(empregados.get(emp));
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy");
+		LocalDate dataI = null, dataF = null;
+		
+		try {
+			dataI = LocalDate.parse(dataInicial, dtf);
+			dataF = LocalDate.parse(dataFinal, dtf);
+		} catch (DateTimeException e) {
+			throw new DataInvalidaException();
+		}
+		Double horas = 0.0;
+		for(Map.Entry<String, Double> entry : hor.getCartaoDePonto().entrySet()) {
+			LocalDate data = LocalDate.parse(entry.getKey(), dtf);
+			if(!data.isBefore(dataI) && data.isBefore(dataF)) {
+				if(extras) {
+					if(entry.getValue() > 8) 
+						horas += entry.getValue() % 8;
+				}
+				else {
+					horas += entry.getValue();
+					if(entry.getValue()>8) 
+						horas -= entry.getValue() % 8;
+				}
+			}
+		}
+		
+		DecimalFormat df = new DecimalFormat("0.###");
+		DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+		simbolos.setDecimalSeparator(',');
+		df.setDecimalFormatSymbols(simbolos);
+		
+		return df.format(horas);
+	}
+	
+	
 	
 	//Lista gigante de exceções do criarEmpregados
 	private void criarEmpregadoExceptions(String nome, String endereco, String tipo, String salario, String comissao) throws Exception{
@@ -132,16 +199,62 @@ public class Sistema {
 		String ID = UUID.randomUUID().toString();
 		double valor = Double.parseDouble(salario.replace(",", "."));
 		
-		if(comissao != null) {
-			double taxa = Double.parseDouble(comissao.replace(",","."));
-			empregados.put(ID, new Comissionado(nome, endereco, tipo, valor, taxa));
-		}
-		else {
-			empregados.put(ID, new Empregado(nome, endereco, tipo, valor));			
+		switch (tipo) {
+			case "comissionado" :
+				double taxa = Double.parseDouble(comissao.replace(",","."));
+				empregados.put(ID, new Comissionado(nome, endereco, tipo, valor, taxa));
+				break;
+			case "horista" :
+				empregados.put(ID, new Horista(nome,endereco,tipo,valor));
+				break;
+			default :
+				empregados.put(ID, new Empregado(nome, endereco, tipo, valor));	
+				break;
 		}
 		
 		return ID;
 	}
+	
+	//Adicionar horas de um horista em certa data
+	public void lancaCartao(String emp, String data, String horas) throws Exception{
+		if(emp.isEmpty())
+			throw new NuloException("Identificacao do empregado");
+		Empregado empregado = empregados.get(emp);
+		
+		if(empregado == null) 
+			throw new EmpregadoNaoExisteException();
+		else if(!empregado.getTipo().equals("horista")) {
+			throw new NaoEhHoristaException();
+		}
+		
+		try {
+			LocalDate.parse(data, DateTimeFormatter.ofPattern("d/M/yyyy"));
+		} catch (DateTimeException e) {
+			throw new DataInvalidaException();
+		}
+		
+		Horista hor = (Horista)empregado;
+		Double horasAdd = Double.parseDouble(horas.replace(',','.'));
+		if(horasAdd <= 0) {
+			throw new HoraNaoPositivaException();
+		}
+		
+		Map<String, Double> map = hor.getCartaoDePonto();
+		map.put(data, horasAdd);
+	}
+	
+	
+	//Remover empregado pelo id
+	public void removerEmpregado(String emp) throws Exception{
+		if(emp.isEmpty()) {
+			throw new NuloException("Identificacao do empregado");
+		}
+		else if(!empregados.containsKey(emp)) {
+			throw new EmpregadoNaoExisteException();
+		}
+		empregados.remove(emp);
+	}
+	
 	
 	/*==============================================================*/
 	/*==============================================================*/
@@ -150,7 +263,7 @@ public class Sistema {
 	//Abrir o arquivo para salver no empregados
 	private Map<String,Empregado> decoder() {
 		if(!ARQUIVO.exists()) {
-			return new HashMap<>();
+			return new LinkedHashMap<>();
 		}
 		
 		try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(ARQUIVO)))) {

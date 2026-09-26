@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="25.0.4.1" class="java.beans.XMLDecoder">
- <object class="java.util.HashMap">
+ <object class="java.util.LinkedHashMap">
   <void method="put">
-   <string>595644ef-6b25-42bc-b71b-ca67bde02029</string>
-   <object class="br.ufal.ic.p2.wepayu.models.Empregado">
+   <string>b5742d4a-ed78-4718-84e0-f6b16b5a0385</string>
+   <object class="br.ufal.ic.p2.wepayu.models.Horista" id="Horista0">
+    <void property="cartaoDePonto">
+     <void method="put">
+      <string>1/1/2005</string>
+      <double>8.0</double>
+     </void>
+     <void method="put">
+      <string>2/1/2005</string>
+      <double>8.5</double>
+     </void>
+     <void method="put">
+      <string>3/1/2005</string>
+      <double>9.0</double>
+     </void>
+     <void method="put">
+      <string>4/1/2005</string>
+      <double>6.0</double>
+     </void>
+    </void>
     <void property="endereco">
      <string>Rua dos Jooes, 333 - Campina Grande</string>
     </void>
@@ -11,7 +29,7 @@
      <string>Joao da Silva</string>
     </void>
     <void property="salario">
-     <double>23.32</double>
+     <double>23.0</double>
     </void>
     <void property="sindicalizado">
      <boolean>false</boolean>
@@ -22,7 +40,33 @@
    </object>
   </void>
   <void method="put">
-   <string>0532c7b0-a170-49c2-a366-6db2b2b03f4a</string>
+   <string>1754b1a2-b840-4023-b0de-5900bd305d2b</string>
+   <object class="br.ufal.ic.p2.wepayu.models.Horista" id="Horista1">
+    <void property="cartaoDePonto">
+     <void method="put">
+      <string>3/1/2005</string>
+      <double>10.0</double>
+     </void>
+    </void>
+    <void property="endereco">
+     <string>Rua das Marias, 333 - Campina Grande</string>
+    </void>
+    <void property="nome">
+     <string>Mariazinha</string>
+    </void>
+    <void property="salario">
+     <double>2300.0</double>
+    </void>
+    <void property="sindicalizado">
+     <boolean>false</boolean>
+    </void>
+    <void property="tipo">
+     <string>horista</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>3105ca59-6739-4d23-b89a-5a036d7e84b6</string>
    <object class="br.ufal.ic.p2.wepayu.models.Comissionado">
     <void property="comissao">
      <double>0.05</double>
@@ -34,7 +78,7 @@
      <string>Gaiato Vendedor</string>
     </void>
     <void property="salario">
-     <double>2300.45</double>
+     <double>1300.0</double>
     </void>
     <void property="sindicalizado">
      <boolean>false</boolean>
@@ -45,56 +89,16 @@
    </object>
   </void>
   <void method="put">
-   <string>0193f026-c47d-466f-a98d-1f6bb55a22ee</string>
-   <object class="br.ufal.ic.p2.wepayu.models.Empregado">
-    <void property="endereco">
-     <string>Rua dos Jooes, 333 - Campina Grande</string>
-    </void>
-    <void property="nome">
-     <string>Joao da Silva</string>
-    </void>
-    <void property="salario">
-     <double>23.0</double>
-    </void>
-    <void property="sindicalizado">
-     <boolean>false</boolean>
-    </void>
-    <void property="tipo">
-     <string>horista</string>
-    </void>
-   </object>
-  </void>
-  <void method="put">
-   <string>db745643-191a-41a3-8a2e-a748ab20de94</string>
-   <object class="br.ufal.ic.p2.wepayu.models.Empregado">
-    <void property="endereco">
-     <string>Rua dos Jooes, 333 - Campina Grande</string>
-    </void>
-    <void property="nome">
-     <string>Joao da Silva</string>
-    </void>
-    <void property="salario">
-     <double>23.0</double>
-    </void>
-    <void property="sindicalizado">
-     <boolean>false</boolean>
-    </void>
-    <void property="tipo">
-     <string>horista</string>
-    </void>
-   </object>
-  </void>
-  <void method="put">
-   <string>fadbd756-9146-42df-a798-e5e2cc0b38ea</string>
+   <string>6ebdf7a2-f0b5-4b3a-8d8d-e2a74ad9615b</string>
    <object class="br.ufal.ic.p2.wepayu.models.Empregado">
     <void property="endereco">
      <string>Rua das Marias, 333 - Campina Grande</string>
     </void>
     <void property="nome">
-     <string>Mariazinha</string>
+     <string>Gorete</string>
     </void>
     <void property="salario">
-     <double>2300.45</double>
+     <double>2300.0</double>
     </void>
     <void property="sindicalizado">
      <boolean>false</boolean>
