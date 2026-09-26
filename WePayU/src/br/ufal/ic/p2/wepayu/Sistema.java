@@ -114,15 +114,24 @@ public class Sistema {
 	
 	//pegar quantas horas alguém trabalhou
 	public String getHorasTrabalhadas(String emp, String dataInicial, String dataFinal, boolean extras) throws Exception{
-		Horista hor = (Horista)(empregados.get(emp));
+		Empregado empregado = empregados.get(emp);
+		if(!empregado.getTipo().equals("horista"))
+			throw new NaoEhHoristaException();
+		
+		Horista hor = (Horista)empregado;
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/M/yyyy");
 		LocalDate dataI = null, dataF = null;
 		
 		try {
 			dataI = LocalDate.parse(dataInicial, dtf);
-			dataF = LocalDate.parse(dataFinal, dtf);
 		} catch (DateTimeException e) {
-			throw new DataInvalidaException();
+			throw new DataInvalidaException("inicial ");
+		}
+		
+		try {
+			dataF = LocalDate.parse(dataFinal, dtf);	
+		} catch (DateTimeException e) {
+			throw new DataInvalidaException("final ");
 		}
 		Double horas = 0.0;
 		for(Map.Entry<String, Double> entry : hor.getCartaoDePonto().entrySet()) {
@@ -230,7 +239,7 @@ public class Sistema {
 		try {
 			LocalDate.parse(data, DateTimeFormatter.ofPattern("d/M/yyyy"));
 		} catch (DateTimeException e) {
-			throw new DataInvalidaException();
+			throw new DataInvalidaException("");
 		}
 		
 		Horista hor = (Horista)empregado;

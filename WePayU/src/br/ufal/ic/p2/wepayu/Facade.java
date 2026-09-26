@@ -1,10 +1,5 @@
 package br.ufal.ic.p2.wepayu;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-
-import br.ufal.ic.p2.wepayu.Exception.DataInvalidaException;
-
 //UTILIDADE DOS METODOS NO SISTEMA
 //MÉTODOS COM FUNCOES PRÓXIMAS AGRUPADOS
 public class Facade {
