@@ -2,7 +2,7 @@
 <java version="25.0.4.1" class="java.beans.XMLDecoder">
  <object class="java.util.LinkedHashMap">
   <void method="put">
-   <string>b5742d4a-ed78-4718-84e0-f6b16b5a0385</string>
+   <string>8e81b7aa-ae76-4d2d-85b2-bd1058ca59a5</string>
    <object class="br.ufal.ic.p2.wepayu.models.Horista" id="Horista0">
     <void property="cartaoDePonto">
      <void method="put">
@@ -40,7 +40,7 @@
    </object>
   </void>
   <void method="put">
-   <string>1754b1a2-b840-4023-b0de-5900bd305d2b</string>
+   <string>98553a8c-f148-44f9-a715-3e6e0f43e382</string>
    <object class="br.ufal.ic.p2.wepayu.models.Horista" id="Horista1">
     <void property="cartaoDePonto">
      <void method="put">
@@ -66,7 +66,7 @@
    </object>
   </void>
   <void method="put">
-   <string>3105ca59-6739-4d23-b89a-5a036d7e84b6</string>
+   <string>5a8d352a-9c3a-4d4b-921f-d581818fa6a4</string>
    <object class="br.ufal.ic.p2.wepayu.models.Comissionado">
     <void property="comissao">
      <double>0.05</double>
@@ -89,7 +89,7 @@
    </object>
   </void>
   <void method="put">
-   <string>6ebdf7a2-f0b5-4b3a-8d8d-e2a74ad9615b</string>
+   <string>ef9bd62b-de40-4f07-9ee3-c1b588ce2197</string>
    <object class="br.ufal.ic.p2.wepayu.models.Empregado">
     <void property="endereco">
      <string>Rua das Marias, 333 - Campina Grande</string>
