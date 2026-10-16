@@ -1,7 +1,6 @@
 package br.ufal.ic.p2.wepayu;
 import br.ufal.ic.p2.wepayu.sistema.*;
 
-//UTILIDADE DOS METODOS NO SISTEMA
 //MÉTODOS COM FUNCOES PRÓXIMAS AGRUPADOS
 public class Facade {
 	private Sistema sistema = new Sistema();
