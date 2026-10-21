@@ -80,6 +80,8 @@ public class CadastroEmpregados {
 				Validador.como(empregado, Comissionado.class, EmpregadoNaoEhComissionadoException::new).setComissao(comissao);
 				break;
 			case "agendaPagamento":
+				if(!repo.existeAgenda(s1))
+					throw new AgendaNaoDisponivelException();
 				empregado.setAgendaPagamento(s1);
 				break;
 			default: // salario

@@ -2,8 +2,6 @@ package br.ufal.ic.p2.wepayu.sistema;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import br.ufal.ic.p2.wepayu.Exception.SistemaEncerradoException;
 
@@ -18,7 +16,6 @@ public class Sistema {
 	private final RelatorioFolha relatorio = new RelatorioFolha();
 	private final ConsultaEmpregados consultas = new ConsultaEmpregados(repositorio);
 	private final CadastroEmpregados cadastro = new CadastroEmpregados(repositorio);
-	private static List<String> listaAgendaPagamento = new ArrayList<>(); 
 	private boolean encerrado = false;
 	
 	/* ---------- consultas ---------- */
@@ -113,11 +110,4 @@ public class Sistema {
 	}
 	
 	/* set e get para conseguir salvar o listaAgendaPagamento*/
-	public static List<String> getListaAgendaPagamento() {
-		return listaAgendaPagamento;
-	}
-
-	public static void setListaAgendaPagamento(List<String> listaAgendaPagamento) {
-		Sistema.listaAgendaPagamento = listaAgendaPagamento;
-	}
 }

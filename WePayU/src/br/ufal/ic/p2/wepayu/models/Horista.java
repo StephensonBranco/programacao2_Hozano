@@ -1,6 +1,5 @@
 package br.ufal.ic.p2.wepayu.models;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,31 +49,19 @@ public class Horista extends Empregado {
 		return horas;
 	}
 
-	@Override
-	public boolean recebeEm(LocalDate data) {
-		return data.getDayOfWeek() == DayOfWeek.FRIDAY;
-	}
-
-	@Override
-	public int diasDoPeriodo(LocalDate data) {
-		return 7;
-	}
-
 	// So e considerado contratado a partir do primeiro cartao lancado
-	@Override
 	public boolean contratadoEm(LocalDate data) {
 		return cartaoDePonto.keySet().stream().anyMatch(k -> !Datas.parse(k).isAfter(data));
 	}
 
-	// periodo (sextaAnterior, dataPagamento] = [sextaAnterior + 1, dataPagamento + 1)
 	@Override
 	public Pagamento calcularBruto(LocalDate dataPagamento) {
-		LocalDate inicio = dataPagamento.minusWeeks(1).plusDays(1);
-		LocalDate fim = dataPagamento.plusDays(1);
-		double normais = horasTrabalhadas(inicio, fim, false);
-		double extras = horasTrabalhadas(inicio, fim, true);
-		double salarioHora = getSalario();
-		double bruto = Dinheiro.truncar(salarioHora * normais + salarioHora * 1.5 * extras);
-		return new Pagamento(normais, extras, 0, 0, 0, bruto);
+	    LocalDate inicio = inicioPeriodo(dataPagamento);
+	    LocalDate fim = dataPagamento.plusDays(1);
+	    double normais = horasTrabalhadas(inicio, fim, false);
+	    double extras = horasTrabalhadas(inicio, fim, true);
+	    double salarioHora = getSalario();
+	    double bruto = Dinheiro.truncar(salarioHora * normais + salarioHora * 1.5 * extras);
+	    return new Pagamento(normais, extras, 0, 0, 0, bruto);
 	}
 }

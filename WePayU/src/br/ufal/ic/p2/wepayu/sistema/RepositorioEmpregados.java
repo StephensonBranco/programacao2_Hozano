@@ -25,13 +25,19 @@ public class RepositorioEmpregados {
 	private static final File ARQUIVO = new File("XML/dados.xml");
 	// Quanto de cada taxa de servico ja foi descontado em folhas (id -> data -> valor)
 	private static final File ARQUIVO_COBRANCAS = new File("XML/taxas_cobradas.xml");
-
+	private static final File ARQUIVO_AGENDA_PAGAMENTOS = new File("XML/agenda_pagamentos.xml");
 	private Map<String, Empregado> empregados;
 	private Map<String, Map<String, Double>> taxasCobradas;
+	private List<String> listaAgendaPagamentos;
+	private List<String> agendaDefault = List.of("semanal 5", "mensal $", "semanal 2 5");
 
 	public RepositorioEmpregados() {
-		empregados = carregar(ARQUIVO);
-		taxasCobradas = carregar(ARQUIVO_COBRANCAS);
+		empregados = carregar(ARQUIVO, new LinkedHashMap<>());
+		taxasCobradas = carregar(ARQUIVO_COBRANCAS, new LinkedHashMap<>());
+		listaAgendaPagamentos = carregar(ARQUIVO_AGENDA_PAGAMENTOS, new ArrayList<>());
+		if(listaAgendaPagamentos.size() < agendaDefault.size()) {
+			listaAgendaPagamentos.addAll(agendaDefault);
+		}
 	}
 
 	/* ---------- empregados ---------- */
@@ -74,6 +80,13 @@ public class RepositorioEmpregados {
 		empregados.remove(id);
 	}
 
+	// Pegar informações da listaAgendaPagamento
+	
+	public boolean existeAgenda(String agenda) throws Exception{
+		return listaAgendaPagamentos.stream().anyMatch(a -> a.equals(agenda));			
+	}
+	
+	
 	/* ---------- taxas de servico ja cobradas ---------- */
 
 	public double getCobrado(String idEmpregado, String data) {
@@ -99,6 +112,7 @@ public class RepositorioEmpregados {
 	public void salvar() {
 		gravar(ARQUIVO, empregados);
 		gravar(ARQUIVO_COBRANCAS, taxasCobradas);
+		gravar(ARQUIVO_AGENDA_PAGAMENTOS, listaAgendaPagamentos);
 	}
 
 	/* ---------- fotos para undo/redo (copia profunda via XMLEncoder) ---------- */
@@ -126,9 +140,10 @@ public class RepositorioEmpregados {
 	/* ---------- arquivo ---------- */
 
 	@SuppressWarnings("unchecked")
-	private static <T> T carregar(File arquivo) {
-		if (!arquivo.exists())
-			return (T) new LinkedHashMap<>();
+	private static <T> T carregar(File arquivo, T padrao) {
+		if (!arquivo.exists()) {
+			return padrao;			
+		}
 		try (XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(arquivo)))) {
 			return (T) d.readObject();
 		} catch (IOException e) {

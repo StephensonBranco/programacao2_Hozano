@@ -1,6 +1,9 @@
 package br.ufal.ic.p2.wepayu.models;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,6 +20,8 @@ import br.ufal.ic.p2.wepayu.util.Datas;
  * salvar e para o undo/redo, mas ninguem consegue alterar o mapa interno por eles.
  */
 public abstract class Empregado {
+	private static final LocalDate PRIMEIRA_SEMANA = LocalDate.of(2005, 1, 1);
+	
 	private String nome;
 	private String endereco;
 	private double salario;
@@ -29,8 +34,8 @@ public abstract class Empregado {
 	private String agencia;
 	private String contaCorrente;
 	private Double debitoSindical = 0.0;
-	private String agendaPagamento;
-
+	protected String agendaPagamento;
+	
 	// usado pelo XMLDecoder
 	protected Empregado() {}
 
@@ -43,10 +48,6 @@ public abstract class Empregado {
 	/* ---------- comportamento especifico de cada tipo ---------- */
 
 	public abstract String getTipo();
-
-	public abstract boolean recebeEm(LocalDate data);
-
-	public abstract int diasDoPeriodo(LocalDate data);
 
 	public abstract Pagamento calcularBruto(LocalDate dataPagamento);
 
@@ -63,6 +64,75 @@ public abstract class Empregado {
 	public double somarTaxasServico(LocalDate inicio, LocalDate fim) {
 		return Datas.somarNoIntervalo(taxasServico, inicio, fim);
 	}
+	
+	/* --- pegar dados da agendaPagemento --- */
+	
+	private String[] agenda() {
+	    return agendaPagamento.trim().split("\\s+");
+	}
+
+	private int intervaloSemanas() {
+	    String[] p = agenda();
+	    return p.length == 3 ? Integer.parseInt(p[1]) : 1;
+	}
+
+	private boolean ehMensal() {
+	    return agenda()[0].equals("mensal");
+	}
+
+	public boolean recebeEm(LocalDate data) {
+	    String[] p = agenda();
+
+	    if (ehMensal()) {
+	        if (p[1].equals("$")) {
+	            return ultimoDiaUtil(data).equals(data);
+	        }
+	        int dia = Math.min(Integer.parseInt(p[1]), data.lengthOfMonth());
+	        return dia == data.getDayOfMonth();
+	    }
+
+	    int intervalo = intervaloSemanas();
+	    int diaDaSemana = Integer.parseInt(p[p.length - 1]);
+
+	    if (data.getDayOfWeek().getValue() != diaDaSemana) {
+	        return false;
+	    }
+	    if (intervalo == 1) {
+	        return true;
+	    }
+	    // blocos de 7 dias a partir de 01/01/2005; paga ao FIM de cada intervalo completo
+	    long bloco = ChronoUnit.WEEKS.between(PRIMEIRA_SEMANA, data);
+	    return (bloco + 1) % intervalo == 0;
+	}
+
+	// Primeiro dia (inclusive) do período que termina em dataPagamento
+	public LocalDate inicioPeriodo(LocalDate dataPagamento) {
+	    if (ehMensal()) {
+	        return agenda()[1].equals("$")
+	                ? dataPagamento.withDayOfMonth(1)
+	                : dataPagamento.minusMonths(1).plusDays(1);
+	    }
+	    return dataPagamento.minusDays(7L * intervaloSemanas() - 1);
+	}
+
+	public int diasDoPeriodo(LocalDate dataPagamento) {
+	    return (int) ChronoUnit.DAYS.between(inicioPeriodo(dataPagamento), dataPagamento) + 1;
+	}
+
+	// Salário fixo do período (assalariado e parte fixa do comissionado)
+	protected double fixoDoPeriodo() {
+	    return ehMensal()
+	            ? getSalario()
+	            : getSalario() * 12.0 / 52.0 * intervaloSemanas();
+	}
+	
+	private static LocalDate ultimoDiaUtil(LocalDate data) {
+		LocalDate dia = data.with(TemporalAdjusters.lastDayOfMonth());
+		while (dia.getDayOfWeek() == DayOfWeek.SATURDAY || dia.getDayOfWeek() == DayOfWeek.SUNDAY)
+			dia = dia.minusDays(1);
+		return dia;
+	}
+	
 
 	/* ---------- troca de tipo ---------- */
 
