@@ -17,6 +17,7 @@ public class Horista extends Empregado {
 
 	public Horista(String nome, String endereco, double salarioHora) throws SalarioNegativoException {
 		super(nome, endereco, salarioHora);
+		setAgendaPagamento("semanal 5");
 	}
 
 	@Override

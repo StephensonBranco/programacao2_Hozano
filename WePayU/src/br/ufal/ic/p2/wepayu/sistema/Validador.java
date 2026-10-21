@@ -93,7 +93,7 @@ public final class Validador {
 	public static void atributo(String atributo) throws Exception {
 		String[] nomes = {"nome", "endereco", "tipo", "salario", "comissao",
 				"sindicalizado", "metodoPagamento", "banco", "agencia",
-				"contaCorrente", "idSindicato", "taxaSindical"};
+				"contaCorrente", "idSindicato", "taxaSindical", "agendaPagamento"};
 		if (Arrays.stream(nomes).noneMatch(nome -> nome.equals(atributo)))
 			throw new AtributoNaoExisteException();
 	}

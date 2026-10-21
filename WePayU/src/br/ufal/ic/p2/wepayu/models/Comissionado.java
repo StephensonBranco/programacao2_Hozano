@@ -24,6 +24,7 @@ public class Comissionado extends Empregado {
 			throws SalarioNegativoException, ComissaoNegativaException {
 		super(nome, endereco, salario);
 		setComissao(comissao);
+		setAgendaPagamento("semanal 2 5");
 	}
 
 	@Override

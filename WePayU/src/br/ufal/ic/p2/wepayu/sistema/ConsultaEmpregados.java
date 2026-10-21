@@ -58,6 +58,8 @@ public class ConsultaEmpregados {
 			case "taxaSindical":
 				exigirSindicalizado(empregado);
 				return Formatador.decimal(empregado.getTaxaSindical());
+			case "agendaPagamento":
+				return empregado.getAgendaPagamento();
 			default:
 				return String.valueOf(empregado.getSindicalizado());
 		}

@@ -14,6 +14,7 @@ public class Assalariado extends Empregado {
 
 	public Assalariado(String nome, String endereco, double salario) throws SalarioNegativoException {
 		super(nome, endereco, salario);
+		setAgendaPagamento("mensal $");
 	}
 
 	@Override

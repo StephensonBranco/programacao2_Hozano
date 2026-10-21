@@ -29,6 +29,7 @@ public abstract class Empregado {
 	private String agencia;
 	private String contaCorrente;
 	private Double debitoSindical = 0.0;
+	private String agendaPagamento;
 
 	// usado pelo XMLDecoder
 	protected Empregado() {}
@@ -178,5 +179,13 @@ public abstract class Empregado {
 
 	public void setDebitoSindical(Double debitoSindical) {
 		this.debitoSindical = debitoSindical == null ? 0.0 : debitoSindical;
+	}
+
+	public String getAgendaPagamento() {
+		return agendaPagamento;
+	}
+
+	public void setAgendaPagamento(String agendaDePagamento) {
+		this.agendaPagamento = agendaDePagamento;
 	}
 }

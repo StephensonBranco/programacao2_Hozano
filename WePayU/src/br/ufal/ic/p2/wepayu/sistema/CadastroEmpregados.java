@@ -79,6 +79,9 @@ public class CadastroEmpregados {
 				double comissao = Validador.comissao(s1);
 				Validador.como(empregado, Comissionado.class, EmpregadoNaoEhComissionadoException::new).setComissao(comissao);
 				break;
+			case "agendaPagamento":
+				empregado.setAgendaPagamento(s1);
+				break;
 			default: // salario
 				empregado.setSalario(Validador.salario(s1));
 				break;
