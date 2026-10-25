@@ -60,6 +60,10 @@ public class Sistema {
 		return id[0];
 	}
 
+	public void criarAgendaDePagamentos(String descricao) throws Exception{
+		historico.executar(() -> repositorio.criarAgendaPagamentos(descricao));
+	}
+	
 	public void removerEmpregado(String emp) throws Exception {
 		historico.executar(() -> repositorio.remover(emp));
 	}

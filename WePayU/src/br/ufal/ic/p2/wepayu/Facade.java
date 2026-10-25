@@ -68,6 +68,10 @@ public class Facade {
 		return sistema.criarEmpregado(nome, endereco, tipo, salario, comissao);
 	}
 	
+	public void criarAgendaDePagamentos(String descricao) throws Exception{
+		sistema.criarAgendaDePagamentos(descricao);
+	}
+	
 	public void removerEmpregado(String emp) throws Exception{
 		sistema.removerEmpregado(emp);
 	}

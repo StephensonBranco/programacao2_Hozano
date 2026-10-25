@@ -75,6 +75,7 @@ public class ConsultaEmpregados {
 		throw new NaoHaEmpregadoNomeException();
 	}
 
+	//O Extras indica se são horas normais ou extras
 	public String horasTrabalhadas(String emp, String dataInicial, String dataFinal, boolean extras) throws Exception {
 		Horista horista = repo.buscar(emp, Horista.class, EmpregadoNaoEhHoristaException::new);
 		Validador.Periodo p = Validador.periodo(dataInicial, dataFinal);

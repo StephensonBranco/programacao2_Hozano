@@ -20,8 +20,7 @@ import br.ufal.ic.p2.wepayu.util.Datas;
  * salvar e para o undo/redo, mas ninguem consegue alterar o mapa interno por eles.
  */
 public abstract class Empregado {
-	private static final LocalDate PRIMEIRA_SEMANA = LocalDate.of(2005, 1, 1);
-	
+	private LocalDate PRIMEIRO_PAGAMENTO = LocalDate.of(2005, 1, 1);
 	private String nome;
 	private String endereco;
 	private double salario;
@@ -101,7 +100,7 @@ public abstract class Empregado {
 	        return true;
 	    }
 	    // blocos de 7 dias a partir de 01/01/2005; paga ao FIM de cada intervalo completo
-	    long bloco = ChronoUnit.WEEKS.between(PRIMEIRA_SEMANA, data);
+	    long bloco = ChronoUnit.WEEKS.between(PRIMEIRO_PAGAMENTO, data);
 	    return (bloco + 1) % intervalo == 0;
 	}
 

@@ -3,6 +3,7 @@ package br.ufal.ic.p2.wepayu.sistema;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import br.ufal.ic.p2.wepayu.Exception.*;
@@ -11,9 +12,9 @@ import br.ufal.ic.p2.wepayu.util.Datas;
 
 public final class Validador {
 	private static final String NUMERO = "[0-9]+(,[0-9]+)?";
-
+	
 	public record Periodo(LocalDate inicio, LocalDate fim) {}
-
+	
 	private Validador() {}
 
 	/* ---------- datas ---------- */
@@ -148,4 +149,50 @@ public final class Validador {
 				throw new ContaCorrenteNuloException();
 		}
 	}
-}
+	
+	private static void validarDiaDaSemana(int x) throws Exception{
+		if(x < 1 || x > 7) {
+			throw new DescricaoAgendaInvalidaException();
+		}
+	}
+	
+	private static void validarSemana(int x) throws Exception{
+		if(x < 1 || x > 52) {
+			throw new DescricaoAgendaInvalidaException();
+		}
+	}
+	
+	public static void agendaPagamentos(String descricao, List<String> listaAgendaPagamentos) throws Exception{
+		String[] partes = descricao.trim().split("\\s+");
+				
+			if(listaAgendaPagamentos.stream().anyMatch(a -> a.equals(descricao))) {
+				throw new AgendaPagamentoJaExisteException();
+			}
+			
+			if(partes[0].equals("semanal")) {
+				int x = Integer.parseInt(partes[1]);
+				
+				if(partes.length<3) {
+					validarDiaDaSemana(x);
+				}
+				else {
+					int y = Integer.parseInt(partes[2]);
+					validarSemana(x);
+					validarDiaDaSemana(y);
+				}
+			}
+			else if(partes[0].equals("mensal")){
+				if(partes[1].matches("\\d+")) {
+					if(Integer.parseInt(partes[1]) < 1 || Integer.parseInt(partes[1]) > 28)
+						throw new DescricaoAgendaInvalidaException();
+				}
+				else {
+					if(!partes[1].equals("$"))
+						throw new DescricaoAgendaInvalidaException();
+				}
+			}
+			else {
+				throw new DescricaoAgendaInvalidaException();			
+			}
+		}
+	}

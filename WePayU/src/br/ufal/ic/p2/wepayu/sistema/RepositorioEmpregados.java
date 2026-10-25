@@ -80,12 +80,16 @@ public class RepositorioEmpregados {
 		empregados.remove(id);
 	}
 
-	// Pegar informações da listaAgendaPagamento
+	// Métodos para a lista da Agenda de Pagamentos
 	
 	public boolean existeAgenda(String agenda) throws Exception{
 		return listaAgendaPagamentos.stream().anyMatch(a -> a.equals(agenda));			
 	}
 	
+	public void criarAgendaPagamentos(String descricao) throws Exception {
+		Validador.agendaPagamentos(descricao, new ArrayList<String>(listaAgendaPagamentos));
+		listaAgendaPagamentos.add(descricao);
+	}
 	
 	/* ---------- taxas de servico ja cobradas ---------- */
 
@@ -105,6 +109,8 @@ public class RepositorioEmpregados {
 	public void zerar() {
 		empregados.clear();
 		taxasCobradas.clear();
+		listaAgendaPagamentos.clear();
+		listaAgendaPagamentos.addAll(agendaDefault);
 		ARQUIVO.delete();
 		ARQUIVO_COBRANCAS.delete();
 	}
