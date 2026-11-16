@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="25.0.4.1" class="java.beans.XMLDecoder">
+ <object class="java.util.ArrayList">
+  <void method="add">
+   <string>semanal 5</string>
+  </void>
+  <void method="add">
+   <string>mensal $</string>
+  </void>
+  <void method="add">
+   <string>semanal 2 5</string>
+  </void>
+  <void method="add">
+   <string>mensal 1</string>
+  </void>
+  <void method="add">
+   <string>semanal 2</string>
+  </void>
+ </object>
+</java>
