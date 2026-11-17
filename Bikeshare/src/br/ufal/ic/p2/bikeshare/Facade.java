@@ -1,40 +1,43 @@
 package br.ufal.ic.p2.bikeshare;
 
+import br.ufal.ic.p2.bikeshare.Sistema.Sistema;
+
 /**
  Facade
  */
 public class Facade {
-
     private static final String AINDA_NAO_IMPLEMENTADO = "Ainda não implementado.";
+    
+    private final Sistema sistema = new Sistema();
 
     // =====================================================================
     // US1 - Cadastro de usuario
     // =====================================================================
 
-    public String criarUsuario(String nome, String email, String senha, String tipo, String cpfOuCnpj) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro) throws Exception{
+        return sistema.criarUsuario(nome, email, senha, tipo, cadastro, null, null, null);
     }
 
-    public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj, String razaoSocial) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj, String razaoSocial) throws Exception{
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, null, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cpf,
-                                String plano, String mensalidade) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+                                String plano, String mensalidade) throws Exception{
+    	return sistema.criarUsuario(nome, email, senha, tipo, cpf, null, plano, mensalidade);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj,
-                                String razaoSocial, String plano, String mensalidade) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+                                String razaoSocial, String plano, String mensalidade) throws Exception{
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, plano, mensalidade);
     }
 
     // =====================================================================
     // US2 - Consulta de usuario
     // =====================================================================
 
-    public String getAtributoUsuario(String usuario, String atributo) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String getAtributoUsuario(String usuario, String atributo) throws Exception{
+        return sistema.getAtributoUsuario(usuario, atributo);
     }
 
     public String getUsuarioPorEmail(String email) {
@@ -194,7 +197,7 @@ public class Facade {
     // =====================================================================
 
     public void zerarSistema() {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+        sistema.zerarSistema();
     }
 
     public void encerrarSistema() {
