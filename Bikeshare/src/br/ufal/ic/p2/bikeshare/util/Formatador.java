@@ -1,0 +1,15 @@
+package br.ufal.ic.p2.bikeshare.util;
+
+import java.util.Locale;
+
+public class Formatador {
+	//Transformar String em Double
+	public static Double stringToDouble(String string) {
+		return Double.parseDouble(string.replace(',', '.'));
+	}
+	
+	//Transformar Double em String
+	public static String doubleToString(Double valor) {
+		return String.format(Locale.of("pt", "BR"), "%.2f", valor);
+	}
+}
