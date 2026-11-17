@@ -15,21 +15,21 @@ public class Facade {
     // =====================================================================
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro) throws Exception{
-        return sistema.criarUsuario(nome, email, senha, tipo, cadastro, null, null, null);
+        return sistema.criarUsuario(nome, email, senha, tipo, cadastro, null, null, null, null, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj, String razaoSocial) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, null, null);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, null, razaoSocial, null, null, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cpf,
                                 String plano, String mensalidade) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cpf, null, plano, mensalidade);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cpf, null, null, plano, mensalidade, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj,
                                 String razaoSocial, String plano, String mensalidade) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, plano, mensalidade);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, null, razaoSocial, plano, mensalidade, null);
     }
 
     // =====================================================================

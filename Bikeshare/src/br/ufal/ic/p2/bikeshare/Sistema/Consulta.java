@@ -2,6 +2,8 @@ package br.ufal.ic.p2.bikeshare.Sistema;
 
 import br.ufal.ic.p2.bikeshare.models.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
+import br.ufal.ic.p2.bikeshare.util.Formatador;
+import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class Consulta {
 	private final Repositorio repo; 
@@ -17,6 +19,7 @@ public class Consulta {
 			case "tipo" -> usuario.getTipo();
 			case "estado" -> usuario.getEstado();
 			case "plano" -> usuario.getPlano();
+			case "mensalidade" -> Validador.mensalidade(usuario);
 			case "cpf" -> {
 				Validador.pessoaFisica(usuario);
 				yield usuario.getCadastro();

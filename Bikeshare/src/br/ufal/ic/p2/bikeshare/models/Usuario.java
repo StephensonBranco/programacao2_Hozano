@@ -8,9 +8,10 @@ public class Usuario {
 	private String cadastro;
 	private String estado;
 	private String plano;
+	private Double mensalidade;
 	private String metodoPagamento;
 	
-	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String estado, String plano) {
+	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String estado, String plano, Double mensalidade, String metodoPagamento) {
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
@@ -18,7 +19,8 @@ public class Usuario {
 		this.cadastro = cadastro;
 		this.estado = estado;
 		this.plano = plano;
-		this.metodoPagamento = "nenhum";
+		this.mensalidade = mensalidade;
+		this.metodoPagamento = metodoPagamento;
 	}
 	
 	public String getNome() {
@@ -66,6 +68,14 @@ public class Usuario {
 
 	public void setPlano(String plano) {
 		this.plano = plano;
+	}
+
+	public Double getMensalidade() {
+		return mensalidade;
+	}
+
+	public void setMensalidade(Double mensalidade) {
+		this.mensalidade = mensalidade;
 	}
 
 	public String getMetodoPagamento() {

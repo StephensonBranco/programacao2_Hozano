@@ -1,8 +1,8 @@
 package br.ufal.ic.p2.bikeshare.exception;
 
 @SuppressWarnings("serial")
-public class NaoEhTipoException extends Exception {
-	public NaoEhTipoException() {
+public class TipoInvalidoException extends Exception {
+	public TipoInvalidoException() { 
 		super("Tipo invalido.");
 	}
-}
+}	

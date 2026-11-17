@@ -45,6 +45,10 @@ public class Repositorio {
 		return Usuarios.get(key);
 	}
 	
+	public Map<String, Usuario> getListaUsuarios() {
+		return new LinkedHashMap<String, Usuario>(Usuarios);
+	}
+	
 	public void zerarSistema() {
 		Usuarios = new LinkedHashMap<>();
 	}

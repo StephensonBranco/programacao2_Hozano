@@ -7,9 +7,9 @@ public class Sistema {
 	
 	/////////////
 	///Alteram o sistema
-	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro,
-            String razaoSocial, String plano, String mensalidade) throws Exception{
-		String id = cadastroUsuario.criarUsuario(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
+	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro, String estado,
+            String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
+		String id = cadastroUsuario.criarUsuario(nome, email, senha, tipo, cadastro, estado, razaoSocial, plano, mensalidade, metodoPagamento);
 		return id;
 	}
 	
