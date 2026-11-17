@@ -10,6 +10,7 @@ bikeshare_data.*
 .idea/
 *.iml
 .vscode/
+.project
 
 # SO
 .DS_Store
