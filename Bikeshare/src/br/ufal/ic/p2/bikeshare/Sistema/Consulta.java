@@ -1,5 +1,7 @@
 package br.ufal.ic.p2.bikeshare.Sistema;
 
+import br.ufal.ic.p2.bikeshare.exception.AtributoNaoExisteException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoNulaException;
 import br.ufal.ic.p2.bikeshare.models.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
@@ -13,6 +15,7 @@ public class Consulta {
 	
 	public String getAtributoUsuario(String id, String atributo) throws Exception{
 		Usuario usuario = repo.getUsuario(id);
+		
 		return switch (atributo) {
 			case "nome" -> usuario.getNome();
 			case "email" -> usuario.getEmail();
@@ -33,7 +36,7 @@ public class Consulta {
 				yield ((PessoaJuridica)usuario).getRazaoSocial()	;
 			}
 			case "metodoPagamento" -> usuario.getMetodoPagamento();
-			default -> "1";
+			default -> throw new AtributoNaoExisteException();
 		};
 	}
 }

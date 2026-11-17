@@ -16,10 +16,15 @@ public class Sistema {
 	public void zerarSistema() {
 		repo.zerarSistema();
 	}
+	
 	/////////////
 	
 	//Não alteram o sistema
 	public String getAtributoUsuario(String Usuario, String atributo) throws Exception{
 		return consulta.getAtributoUsuario(Usuario, atributo);
+	}
+	
+	public void encerrarSistema() {
+		repo.salvar();
 	}
 }

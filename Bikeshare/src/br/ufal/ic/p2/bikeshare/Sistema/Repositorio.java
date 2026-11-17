@@ -14,51 +14,60 @@ import java.beans.XMLDecoder;
 
 import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoNulaException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
+import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class Repositorio {
 	private static final File ARQUIVO_USUARIOS = new File("XML/usuarios.xml");
+	private static final File ARQUIVO_ID = new File("XML/id.xml");
 //	private static final File ARQUIVO_BICICLETAS = new File("/XML/bicicletas.xml");
-	private Map<String, Usuario> Usuarios; 
+	private Map<String, Usuario> usuarios; 
+	private int id_atual;
 	
 	public Repositorio() {
-		Usuarios = carregar(ARQUIVO_USUARIOS);
+		usuarios = carregar(ARQUIVO_USUARIOS, new LinkedHashMap<>());
+		id_atual = carregar(ARQUIVO_ID, 1);
 	}
 	
 	public void salvar()  {
-		gravar(ARQUIVO_USUARIOS, Usuarios);
+		gravar(ARQUIVO_USUARIOS, usuarios);
+		gravar(ARQUIVO_ID, id_atual);
 	}
 
 	//Guarda um usuario no repositorio em certo id
 	public String adicionar(Usuario usuario) {
-		String id = UUID.randomUUID().toString();
-		Usuarios.put(id, usuario);
+		String id = "U" + (id_atual++);
+		usuarios.put(id, usuario);
 		return id;
 	}
 	
 	public Usuario getUsuario(String key) throws Exception{
-		Usuario usuario = Usuarios.get(key);
+		Validador.id(key);
+		
+		Usuario usuario = usuarios.get(key);
 		if(usuario==null)
 			throw new UsuarioNaoExisteException();
 		
-		return Usuarios.get(key);
+		return usuarios.get(key);
 	}
 	
 	public Map<String, Usuario> getListaUsuarios() {
-		return new LinkedHashMap<String, Usuario>(Usuarios);
+		return new LinkedHashMap<String, Usuario>(usuarios);
 	}
 	
 	public void zerarSistema() {
-		Usuarios = new LinkedHashMap<>();
+		usuarios.clear();
+		id_atual = 1;
 	}
 	
 	
 	//Guardar os arquivos
 	@SuppressWarnings("unchecked")
-	private static <T> T carregar(File arquivo) {
+	private static <T> T carregar(File arquivo, T padrao) {
 		if (!arquivo.exists())
-			return (T) new LinkedHashMap<>();
+			return padrao;
 		try (XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(arquivo)))) {
 			return (T) d.readObject();
 		} catch (IOException e) {

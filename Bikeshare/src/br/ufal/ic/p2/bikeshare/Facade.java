@@ -201,6 +201,6 @@ public class Facade {
     }
 
     public void encerrarSistema() {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    	sistema.encerrarSistema();
     }
 }

@@ -11,6 +11,10 @@ public class Usuario {
 	private Double mensalidade;
 	private String metodoPagamento;
 	
+	public Usuario() {
+		
+	}
+	
 	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String estado, String plano, Double mensalidade, String metodoPagamento) {
 		this.nome = nome;
 		this.email = email;

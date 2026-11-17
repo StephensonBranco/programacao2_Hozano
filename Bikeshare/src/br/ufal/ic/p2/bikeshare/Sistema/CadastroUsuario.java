@@ -14,8 +14,7 @@ public class CadastroUsuario {
 	}
 	
 	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro, String estado,
-            String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
-		
+								String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
 		Usuario usuario;
 		Double mensal = null;
 		
@@ -27,12 +26,14 @@ public class CadastroUsuario {
 		if(metodoPagamento==null)
 			metodoPagamento = "nenhum";
 		
+		//Validação geral 
 		Validador.criacao(repo.getListaUsuarios(), nome, email, senha, tipo, cadastro, estado, razaoSocial, plano, mensalidade, metodoPagamento);
 		
-		if(mensalidade != null)
+		if(plano.equals("assinante"))
 			mensal = Formatador.stringToDouble(mensalidade);
 		else
 			mensal = null;
+		
 		
 		switch (tipo) {
 			case "pessoaFisica":
