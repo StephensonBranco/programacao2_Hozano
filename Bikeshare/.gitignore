@@ -1,0 +1,20 @@
+# build output
+out/
+*.class
+
+# arquivo de persistencia gerado em tempo de execucao
+*.ser
+bikeshare_data.*
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+
+# SO
+.DS_Store
+/bin/
+
+# XML
+/XML/
