@@ -1,6 +1,6 @@
 package br.ufal.ic.p2.bikeshare;
 
-import br.ufal.ic.p2.bikeshare.Sistema.Sistema;
+import br.ufal.ic.p2.bikeshare.servicos.Sistema;
 
 /**
  Facade
@@ -15,21 +15,21 @@ public class Facade {
     // =====================================================================
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro) throws Exception{
-        return sistema.criarUsuario(nome, email, senha, tipo, cadastro, null, null, null, null, null);
+        return sistema.criarUsuario(nome, email, senha, tipo, cadastro, null, null, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj, String razaoSocial) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, null, razaoSocial, null, null, null);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, null, null);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cpf,
                                 String plano, String mensalidade) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cpf, null, null, plano, mensalidade, null);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cpf, null, plano, mensalidade);
     }
 
     public String criarUsuario(String nome, String email, String senha, String tipo, String cnpj,
                                 String razaoSocial, String plano, String mensalidade) throws Exception{
-    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, null, razaoSocial, plano, mensalidade, null);
+    	return sistema.criarUsuario(nome, email, senha, tipo, cnpj, razaoSocial, plano, mensalidade);
     }
 
     // =====================================================================
@@ -40,8 +40,8 @@ public class Facade {
         return sistema.getAtributoUsuario(usuario, atributo);
     }
 
-    public String getUsuarioPorEmail(String email) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String getUsuarioPorEmail(String email) throws Exception{
+        return sistema.getUsuarioPorEmail(email);
     }
 
     // =====================================================================

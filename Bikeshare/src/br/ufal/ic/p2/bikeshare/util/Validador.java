@@ -15,6 +15,9 @@ import br.ufal.ic.p2.bikeshare.exception.MensalidadeNulaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoEhFisicaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoEhJuridicaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoPossuiMensalidadeException;
+import br.ufal.ic.p2.bikeshare.exception.NaoUsaCartaoException;
+import br.ufal.ic.p2.bikeshare.exception.NaoUsaPixException;
+import br.ufal.ic.p2.bikeshare.exception.NaoUsaSaldoException;
 import br.ufal.ic.p2.bikeshare.exception.NomeNuloException;
 import br.ufal.ic.p2.bikeshare.exception.PlanoInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.PlanoNaoPossuiMensalidadeException;
@@ -28,8 +31,8 @@ public class Validador {
 		
 	}
 	
-	public static void criacao(Map<String, Usuario> usuarios, String nome, String email, String senha, String tipo, String cadastro, String estado,
-            String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
+	public static void criacao(Map<String, Usuario> usuarios, String nome, String email, String senha, String tipo, String cadastro,
+            String razaoSocial, String plano, String mensalidade) throws Exception{
 		//Valores nulos
 		if(nome.isEmpty() || nome.isBlank())
 			throw new NomeNuloException();
@@ -79,10 +82,25 @@ public class Validador {
 		}
 	}
 	
-	public static String mensalidade(Usuario usuario) throws Exception{
+	//Ver se o pagamento que está sendo requesitado do usuário é condizente com o metodoPagamento
+	public static void pagamentoParaMetodo(Usuario usuario, String pagamento) throws Exception{
+		//NOMES PROVISORIOS DE METODOS
+		if((pagamento.equals("numeroCartao") || pagamento.equals("validadeCartao")) && !usuario.getMetodoPagamento().equals("Cartao"))
+			throw new NaoUsaCartaoException();
+		else if(pagamento.equals("chavePix") && !usuario.getMetodoPagamento().equals("Pix"))
+			throw new NaoUsaPixException();
+		else if(pagamento.equals("saldo") && !usuario.getMetodoPagamento().equals("Saldo"))
+			throw new NaoUsaSaldoException();
+	}
+	
+	public static void email(String email) throws Exception {
+		if(email.isEmpty() || email.isBlank())
+			throw new EmailNuloException();
+	}
+	
+	public static void mensalidade(Usuario usuario) throws Exception{
 		if(!usuario.getPlano().equals("assinante")) 
 			throw new NaoPossuiMensalidadeException();
-		return Formatador.doubleToString(usuario.getMensalidade());
 	}
 	
 	public static void id(String id) throws Exception{

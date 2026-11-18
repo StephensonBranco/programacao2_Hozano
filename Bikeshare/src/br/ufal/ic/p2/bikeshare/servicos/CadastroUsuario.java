@@ -1,4 +1,4 @@
-package br.ufal.ic.p2.bikeshare.Sistema;
+package br.ufal.ic.p2.bikeshare.servicos;
 
 import br.ufal.ic.p2.bikeshare.exception.TipoInvalidoException;
 import br.ufal.ic.p2.bikeshare.models.PessoaFisica;
@@ -13,21 +13,18 @@ public class CadastroUsuario {
 		this.repo = repo;
 	}
 	
-	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro, String estado,
-								String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
+	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro,
+								String razaoSocial, String plano, String mensalidade) throws Exception {
+		
 		Usuario usuario;
 		Double mensal = null;
 		
 		//Valores padrões
 		if(plano==null)
 			plano = "avulso";
-		if(estado==null)
-			estado = "ativo";
-		if(metodoPagamento==null)
-			metodoPagamento = "nenhum";
 		
 		//Validação geral 
-		Validador.criacao(repo.getListaUsuarios(), nome, email, senha, tipo, cadastro, estado, razaoSocial, plano, mensalidade, metodoPagamento);
+		Validador.criacao(repo.getListaUsuarios(), nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
 		
 		if(plano.equals("assinante"))
 			mensal = Formatador.stringToDouble(mensalidade);
@@ -37,14 +34,15 @@ public class CadastroUsuario {
 		
 		switch (tipo) {
 			case "pessoaFisica":
-				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, estado, plano, mensal, metodoPagamento);
+				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, plano, mensal);
 				break;
 			case "pessoaJuridica":
-				usuario = new PessoaJuridica(nome, email, senha, tipo, cadastro, estado, razaoSocial, plano, mensal, metodoPagamento);
+				usuario = new PessoaJuridica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensal);
 				break;
 			default:
 				throw new TipoInvalidoException();
 		}
+		
 		String id = repo.adicionar(usuario);
 		return id;
 	}
