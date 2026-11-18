@@ -10,21 +10,31 @@ public class Usuario {
 	private String plano;
 	private Double mensalidade;
 	private String metodoPagamento;
+	private String aluguelAtivo;
+	private Double totalPendencias;
+	private Cartao cartao;
+	private String chavePix;
+	private Double saldo;
 	
 	public Usuario() {
 		
 	}
 	
-	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String estado, String plano, Double mensalidade, String metodoPagamento) {
+	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String plano, Double mensalidade) {
 		this.nome = nome;
 		this.email = email;
 		this.senha = senha;
 		this.tipo = tipo;
 		this.cadastro = cadastro;
-		this.estado = estado;
+		this.estado = "ativo";
 		this.plano = plano;
 		this.mensalidade = mensalidade;
-		this.metodoPagamento = metodoPagamento;
+		this.metodoPagamento = "nenhum";
+		this.aluguelAtivo = "nenhum";
+		this.totalPendencias = 0.00;
+		this.cartao = null;
+		this.chavePix = null;
+		this.saldo = null;
 	}
 	
 	public String getNome() {
@@ -88,5 +98,45 @@ public class Usuario {
 
 	public void setMetodoPagamento(String metodoPagamento) {
 		this.metodoPagamento = metodoPagamento;
+	}
+
+	public String getAluguelAtivo() {
+		return aluguelAtivo;
+	}
+
+	public void setAluguelAtivo(String aluguelAtivo) {
+		this.aluguelAtivo = aluguelAtivo;
+	}
+
+	public Double getTotalPendencias() {
+		return totalPendencias;
+	}
+
+	public void setTotalPendencias(Double totalPendencias) {
+		this.totalPendencias = totalPendencias;
+	}
+
+	public Cartao getCartao() {
+		return new Cartao(this.cartao);
+	}
+
+	public void setCartao(Cartao cartao) {
+		this.cartao = cartao;
+	}
+
+	public String getChavePix() {
+		return chavePix;
+	}
+
+	public void setChavePix(String chavePix) {
+		this.chavePix = chavePix;
+	}
+
+	public Double getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(Double saldo) {
+		this.saldo = saldo;
 	}
 }

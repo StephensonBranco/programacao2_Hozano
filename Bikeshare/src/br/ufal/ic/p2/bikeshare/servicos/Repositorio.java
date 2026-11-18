@@ -1,4 +1,4 @@
-package br.ufal.ic.p2.bikeshare.Sistema;
+package br.ufal.ic.p2.bikeshare.servicos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -23,8 +23,9 @@ public class Repositorio {
 	private static final File ARQUIVO_USUARIOS = new File("XML/usuarios.xml");
 	private static final File ARQUIVO_ID = new File("XML/id.xml");
 //	private static final File ARQUIVO_BICICLETAS = new File("/XML/bicicletas.xml");
-	private Map<String, Usuario> usuarios; 
-	private int id_atual;
+	
+	private Map<String, Usuario> usuarios;
+	private int id_atual;	//para retornar o id de um novo usuário a partir do mais novo
 	
 	public Repositorio() {
 		usuarios = carregar(ARQUIVO_USUARIOS, new LinkedHashMap<>());
@@ -43,6 +44,7 @@ public class Repositorio {
 		return id;
 	}
 	
+	//Pega um usuário do banco a partir do id dele
 	public Usuario getUsuario(String key) throws Exception{
 		Validador.id(key);
 		
@@ -53,6 +55,7 @@ public class Repositorio {
 		return usuarios.get(key);
 	}
 	
+	//Dá uma cópia dos usuários
 	public Map<String, Usuario> getListaUsuarios() {
 		return new LinkedHashMap<String, Usuario>(usuarios);
 	}
@@ -63,9 +66,9 @@ public class Repositorio {
 	}
 	
 	
-	//Guardar os arquivos
+	////////////ARQUIVOS////////////
 	@SuppressWarnings("unchecked")
-	private static <T> T carregar(File arquivo, T padrao) {
+	private static <T> T carregar(File arquivo, T padrao) {		// T padrao: quando não existe um arquivo para carregar, então retorna um novo
 		if (!arquivo.exists())
 			return padrao;
 		try (XMLDecoder d = new XMLDecoder(new BufferedInputStream(new FileInputStream(arquivo)))) {

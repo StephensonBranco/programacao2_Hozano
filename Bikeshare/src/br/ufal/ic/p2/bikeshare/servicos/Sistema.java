@@ -1,4 +1,4 @@
-package br.ufal.ic.p2.bikeshare.Sistema;
+package br.ufal.ic.p2.bikeshare.servicos;
 
 public class Sistema {
 	private final Repositorio repo = new Repositorio();
@@ -7,9 +7,9 @@ public class Sistema {
 	
 	/////////////
 	///Alteram o sistema
-	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro, String estado,
-            String razaoSocial, String plano, String mensalidade, String metodoPagamento) throws Exception{
-		String id = cadastroUsuario.criarUsuario(nome, email, senha, tipo, cadastro, estado, razaoSocial, plano, mensalidade, metodoPagamento);
+	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro,
+            String razaoSocial, String plano, String mensalidade) throws Exception{
+		String id = cadastroUsuario.criarUsuario(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
 		return id;
 	}
 	
@@ -22,6 +22,10 @@ public class Sistema {
 	//Não alteram o sistema
 	public String getAtributoUsuario(String Usuario, String atributo) throws Exception{
 		return consulta.getAtributoUsuario(Usuario, atributo);
+	}
+	
+	public String getUsuarioPorEmail(String email) throws Exception{
+		return consulta.getUsuarioPorEmail(email);
 	}
 	
 	public void encerrarSistema() {
