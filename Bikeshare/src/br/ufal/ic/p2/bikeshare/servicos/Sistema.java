@@ -25,12 +25,15 @@ public class Sistema {
 		cadastroUsuario.alterarUsuario(usuario, atributo, valor, numeroCartao, validadeCartao);
 	}
 	
+	public void removerUsuario(String usuario) throws Exception {
+		repo.removerUsuario(usuario);
+	}
+	
 	public void zerarSistema() {
 		repo.zerarSistema();
 	}
 	
 	/////////////
-	
 	//Não alteram o sistema
 	public String getAtributoUsuario(String Usuario, String atributo) throws Exception{
 		return consulta.getAtributoUsuario(Usuario, atributo);
