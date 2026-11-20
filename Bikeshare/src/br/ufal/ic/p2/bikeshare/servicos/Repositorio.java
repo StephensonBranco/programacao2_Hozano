@@ -35,6 +35,15 @@ public class Repositorio {
 		gravar(ARQUIVO_ID, id_atual);
 	}
 
+	public void removerUsuario(String usuario) throws Exception{
+		Validador.id(usuario);
+		if(!usuarios.containsKey(usuario)) {
+			throw new UsuarioNaoExisteException();
+		}
+		
+		usuarios.remove(usuario);
+	}
+	
 	//Guarda um usuario no repositorio em certo id
 	public String adicionar(Usuario usuario) {
 		String id = "U" + (id_atual++);
