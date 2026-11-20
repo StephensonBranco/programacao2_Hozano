@@ -9,6 +9,7 @@ import br.ufal.ic.p2.bikeshare.models.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
+import br.ufal.ic.p2.bikeshare.exception.*;
 
 public class Consulta {
 	private final Repositorio repo; 
@@ -27,7 +28,8 @@ public class Consulta {
 			case "estado" -> usuario.getEstado();
 			case "plano" -> usuario.getPlano();
 			case "mensalidade" ->  {
-				Validador.mensalidade(usuario);
+				if(!usuario.getPlano().equals("assinante"))
+					throw new PlanoNaoPossuiMensalidadeException();
 				yield Formatador.doubleToString(usuario.getMensalidade());
 			}
 			case "cpf" -> {
@@ -68,7 +70,7 @@ public class Consulta {
 	}
 	
 	public String getUsuarioPorEmail(String email) throws Exception{
-		Validador.email(email);
+		Validador.nulo(email, EmailNuloException::new);
 		
 		Map<String, Usuario> usuarios = repo.getListaUsuarios();
 		String id = usuarios.

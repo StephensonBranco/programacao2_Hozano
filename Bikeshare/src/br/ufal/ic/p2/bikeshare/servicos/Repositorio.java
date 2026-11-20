@@ -2,7 +2,6 @@ package br.ufal.ic.p2.bikeshare.servicos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -14,7 +13,6 @@ import java.beans.XMLDecoder;
 
 import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
-import br.ufal.ic.p2.bikeshare.exception.IdentificacaoNulaException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Validador;
