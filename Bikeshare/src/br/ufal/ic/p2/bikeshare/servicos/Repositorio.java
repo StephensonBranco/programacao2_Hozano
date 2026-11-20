@@ -2,6 +2,7 @@ package br.ufal.ic.p2.bikeshare.servicos;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.beans.XMLEncoder;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,53 +14,79 @@ import java.beans.XMLDecoder;
 
 import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
+import br.ufal.ic.p2.bikeshare.exception.EstacaoNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
+import br.ufal.ic.p2.bikeshare.models.Estacao;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class Repositorio {
 	private static final File ARQUIVO_USUARIOS = new File("XML/usuarios.xml");
-	private static final File ARQUIVO_ID = new File("XML/id.xml");
-//	private static final File ARQUIVO_BICICLETAS = new File("/XML/bicicletas.xml");
+	private static final File ARQUIVO_ESTACOES = new File("/XML/estacoes.xml");
+	private static final File ARQUIVO_ID_USUARIOS = new File("XML/id_usuarios.xml");
+	private static final File ARQUIVO_ID_ESTACOES = new File("XML/id_estacoes.xml");
 	
 	private Map<String, Usuario> usuarios;
-	private int id_atual;	//para retornar o id de um novo usuário a partir do mais novo
+	private Map<String, Estacao> estacoes;
+	private int id_atual_usuarios;	//para retornar o id de um novo usuário a partir do mais novo
+	private int id_atual_estacoes;
 	
 	public Repositorio() {
 		usuarios = carregar(ARQUIVO_USUARIOS, new LinkedHashMap<>());
-		id_atual = carregar(ARQUIVO_ID, 1);
+		estacoes = carregar(ARQUIVO_ESTACOES, new LinkedHashMap<>());
+		id_atual_usuarios = carregar(ARQUIVO_ID_USUARIOS, 1);
+		id_atual_estacoes = carregar(ARQUIVO_ID_ESTACOES, 1);
 	}
 	
 	public void salvar()  {
 		gravar(ARQUIVO_USUARIOS, usuarios);
-		gravar(ARQUIVO_ID, id_atual);
+		gravar(ARQUIVO_ESTACOES, estacoes);
+		gravar(ARQUIVO_ID_USUARIOS, id_atual_usuarios);
+		gravar(ARQUIVO_ID_ESTACOES, id_atual_estacoes);
 	}
 
 	public void removerUsuario(String usuario) throws Exception{
-		Validador.id(usuario);
+		Validador.idUsuario(usuario);
 		if(!usuarios.containsKey(usuario)) {
 			throw new UsuarioNaoExisteException();
 		}
-		
 		usuarios.remove(usuario);
 	}
 	
-	//Guarda um usuario no repositorio em certo id
-	public String adicionar(Usuario usuario) {
-		String id = "U" + (id_atual++);
-		usuarios.put(id, usuario);
-		return id;
+	//Guarda um elemento no repositorio para o novo maior ID
+	private <T> String adicionar(Map<String, T> lista, String prefixo, T elemento, int id) {
+		String id_s = prefixo + id;
+		lista.put(id_s, elemento);
+		return id_s;
+	}
+	
+	
+	public String adicionarUsuario(Usuario usuario) {
+		return adicionar(usuarios, "U", usuario, id_atual_usuarios++);
+	}
+	
+	
+	public String adicionarEstacao(Estacao estacao) {
+		return adicionar(estacoes, "E", estacao, id_atual_estacoes++);
 	}
 	
 	//Pega um usuário do banco a partir do id dele
-	public Usuario getUsuario(String key) throws Exception{
-		Validador.id(key);
+	private <T> T getElemento(Map<String, T> lista, String key, Supplier<? extends Exception> e) throws Exception{
+		T elemento = lista.get(key);
+		if(elemento==null)
+			throw e.get();
 		
-		Usuario usuario = usuarios.get(key);
-		if(usuario==null)
-			throw new UsuarioNaoExisteException();
-		
-		return usuarios.get(key);
+		return elemento;
+	}
+	
+	public Usuario getUsuario(String key) throws Exception {
+		Validador.idUsuario(key);
+		return getElemento(usuarios, key, UsuarioNaoExisteException::new);
+	}
+	
+	public Estacao getEstacao(String key) throws Exception {
+		Validador.idEstacao(key);
+		return getElemento(estacoes, key, EstacaoNaoExisteException::new);
 	}
 	
 	//Dá uma cópia dos usuários
@@ -67,9 +94,15 @@ public class Repositorio {
 		return new LinkedHashMap<String, Usuario>(usuarios);
 	}
 	
+	public Map<String, Estacao> getListaEstacoes() {
+		return new LinkedHashMap<String, Estacao>(estacoes);
+	}
+	
 	public void zerarSistema() {
 		usuarios.clear();
-		id_atual = 1;
+		estacoes.clear();
+		id_atual_usuarios = 1;
+		id_atual_estacoes = 1;
 	}
 	
 	
