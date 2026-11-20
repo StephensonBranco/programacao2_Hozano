@@ -44,7 +44,8 @@ public class CadastroUsuario {
 		Usuario user = repo.getUsuario(usuario);
 		switch (atributo) {
 			case "nome" -> user.setNome(valor);
-		
+			case "email" -> user.setEmail(valor);
+			case "senha" -> user.setSenha(valor);
 		}
 	}
 }
