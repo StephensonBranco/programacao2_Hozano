@@ -14,7 +14,6 @@ import br.ufal.ic.p2.bikeshare.exception.MensalidadeNegativaException;
 import br.ufal.ic.p2.bikeshare.exception.MensalidadeNulaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoEhFisicaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoEhJuridicaException;
-import br.ufal.ic.p2.bikeshare.exception.NaoPossuiMensalidadeException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaCartaoException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaPixException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaSaldoException;
