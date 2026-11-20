@@ -1,5 +1,7 @@
 package br.ufal.ic.p2.bikeshare.models;
 
+import br.ufal.ic.p2.bikeshare.util.Validador;
+
 public class Cartao {
 	private String numeroCartao;
 	private String validadeCartao;
@@ -8,9 +10,9 @@ public class Cartao {
 		
 	}
 	
-	public Cartao(String numeroCartao, String validadeCartao) {
-		this.numeroCartao = numeroCartao;
-		this.validadeCartao = validadeCartao;
+	public Cartao(String numeroCartao, String validadeCartao) throws Exception{
+		setNumeroCartao(numeroCartao);
+		setValidadeCartao(validadeCartao);
 	}
 	
 	public Cartao(Cartao cartao) {
@@ -28,7 +30,8 @@ public class Cartao {
 		return validadeCartao;
 	}
 
-	public void setValidadeCartao(String validadeCartao) {
+	public void setValidadeCartao(String validadeCartao) throws Exception {
+		Validador.validadeCartao(validadeCartao);
 		this.validadeCartao = validadeCartao;
 	}
 
@@ -36,7 +39,8 @@ public class Cartao {
 		return numeroCartao;
 	}
 
-	public void setNumeroCartao(String numeroCartao) {
+	public void setNumeroCartao(String numeroCartao) throws Exception {
+		Validador.numeroCartao(numeroCartao);
 		this.numeroCartao = numeroCartao;
 	}
 	

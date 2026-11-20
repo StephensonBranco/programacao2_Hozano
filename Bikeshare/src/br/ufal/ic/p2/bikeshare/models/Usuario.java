@@ -36,7 +36,7 @@ public abstract class Usuario {
 		setTotalPendencias(0.00);
 		setCartao(null);
 		setChavePix(null);
-		setSaldo(null);
+		setSaldo(0.00);
 	}
 	
 	public String getNome() {
@@ -120,7 +120,8 @@ public abstract class Usuario {
 		return metodoPagamento;
 	}
 
-	public void setMetodoPagamento(String metodoPagamento) {
+	public void setMetodoPagamento(String metodoPagamento) throws Exception {
+		Validador.metodoPagamento(metodoPagamento);
 		this.metodoPagamento = metodoPagamento;
 	}
 
@@ -152,7 +153,8 @@ public abstract class Usuario {
 		return chavePix;
 	}
 
-	public void setChavePix(String chavePix) {
+	public void setChavePix(String chavePix) throws Exception {
+		Validador.chavePix(chavePix);
 		this.chavePix = chavePix;
 	}
 
@@ -160,7 +162,13 @@ public abstract class Usuario {
 		return saldo;
 	}
 
+	//XML
 	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
+	}
+	
+	public void setSaldo(String saldo) throws Exception {
+		Validador.saldo(saldo);
+		this.saldo = Formatador.stringToDouble(saldo) + this.saldo;
 	}
 }

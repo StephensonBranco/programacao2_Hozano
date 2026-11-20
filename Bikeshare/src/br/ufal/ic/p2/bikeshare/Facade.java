@@ -52,12 +52,12 @@ public class Facade {
         sistema.alterarUsuario(usuario, atributo, valor);
     }
 
-    public void alterarUsuario(String usuario, String atributo, String valor1, String chave) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public void alterarUsuario(String usuario, String atributo, String valor1, String chave) throws Exception {
+        sistema.alterarUsuario(usuario, atributo, valor1, chave);
     }
 
-    public void alterarUsuario(String usuario, String atributo, String valor1, String numero, String validade) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public void alterarUsuario(String usuario, String atributo, String valor1, String numero, String validade) throws Exception{
+    	sistema.alterarUsuario(usuario, atributo, valor1, numero, validade);
     }
 
     // =====================================================================
