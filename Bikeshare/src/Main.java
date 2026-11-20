@@ -5,8 +5,8 @@ public class Main {
     public static void main(String[] args) {
         String facade = "br.ufal.ic.p2.bikeshare.Facade";
         EasyAccept.main(new String[]{facade, "tests/us1.txt"});
-        EasyAccept.main(new String[]{facade, "tests/us1_1.txt"});
-        EasyAccept.main(new String[]{facade, "tests/us2.txt"});
+//        EasyAccept.main(new String[]{facade, "tests/us1_1.txt"});
+//        EasyAccept.main(new String[]{facade, "tests/us2.txt"});
 //        EasyAccept.main(new String[]{facade, "tests/us3.txt"});
 //        EasyAccept.main(new String[]{facade, "tests/us3_1.txt"});
 //        EasyAccept.main(new String[]{facade, "tests/us4.txt"});

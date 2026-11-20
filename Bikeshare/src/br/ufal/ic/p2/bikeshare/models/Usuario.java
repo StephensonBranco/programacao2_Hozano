@@ -1,5 +1,7 @@
 package br.ufal.ic.p2.bikeshare.models;
 
+import br.ufal.ic.p2.bikeshare.util.Validador;
+
 public class Usuario {
 	private String nome;
 	private String email;
@@ -21,38 +23,41 @@ public class Usuario {
 	}
 	
 	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String plano, Double mensalidade) {
-		this.nome = nome;
-		this.email = email;
-		this.senha = senha;
-		this.tipo = tipo;
-		this.cadastro = cadastro;
-		this.estado = "ativo";
-		this.plano = plano;
-		this.mensalidade = mensalidade;
-		this.metodoPagamento = "nenhum";
-		this.aluguelAtivo = "nenhum";
-		this.totalPendencias = 0.00;
-		this.cartao = null;
-		this.chavePix = null;
-		this.saldo = null;
+		setNome(nome);
+		setEmail(email);
+		setSenha(senha);
+		setTipo(tipo);
+		setCadastro(cadastro);
+		setEstado("ativo");
+		setPlano(plano);
+		setMensalidade(mensalidade);
+		setMetodoPagamento("nenhum");
+		setAluguelAtivo("nenhum");
+		setTotalPendencias(0.00);
+		setCartao(null);
+		setChavePix(null);
+		setSaldo(null);
 	}
 	
 	public String getNome() {
 		return nome;
 	}
-	public void setNome(String nome) {
+	public void setNome(String nome) throws Exception {
+		Validador.nome(nome);
 		this.nome = nome;
 	}
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) {
+	public void setEmail(String email) throws Exception {
+		Validador.email(email);
 		this.email = email;
 	}
 	public String getSenha() {
 		return senha;
 	}
-	public void setSenha(String senha) {
+	public void setSenha(String senha) throws Exception {
+		Validador.email(email);
 		this.senha = senha;
 	}
 	public String getTipo() {
@@ -64,9 +69,12 @@ public class Usuario {
 	public String getCadastro() {
 		return cadastro;
 	}
+	
+	//CPF E CNPJ NAS SUBCLASSES
 	public void setCadastro(String cadastro) {
 		this.cadastro = cadastro;
 	}
+	
 
 	public String getEstado() {
 		return estado;

@@ -9,6 +9,7 @@ import br.ufal.ic.p2.bikeshare.models.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
+import br.ufal.ic.p2.bikeshare.exception.*;
 
 public class Consulta {
 	private final Repositorio repo; 
@@ -68,7 +69,7 @@ public class Consulta {
 	}
 	
 	public String getUsuarioPorEmail(String email) throws Exception{
-		Validador.email(email);
+		Validador.nulo(email, EmailNuloException::new);
 		
 		Map<String, Usuario> usuarios = repo.getListaUsuarios();
 		String id = usuarios.

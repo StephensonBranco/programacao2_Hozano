@@ -13,6 +13,10 @@ public class Sistema {
 		return id;
 	}
 	
+	public void alterarUsuario(String usuario, String atributo, String valor) throws Exception {
+		cadastroUsuario.alterarUsuario(usuario, atributo, valor);
+	}
+	
 	public void zerarSistema() {
 		repo.zerarSistema();
 	}

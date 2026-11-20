@@ -9,8 +9,8 @@ public class Cartao {
 	}
 	
 	public Cartao(String numeroCartao, String validadeCartao) {
-		this.setNumeroCartao(numeroCartao);
-		this.setValidadeCartao(validadeCartao);
+		this.numeroCartao = numeroCartao;
+		this.validadeCartao = validadeCartao;
 	}
 	
 	public Cartao(Cartao cartao) {

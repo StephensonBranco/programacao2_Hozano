@@ -33,24 +33,9 @@ public class Validador {
 	
 	public static void criacao(Map<String, Usuario> usuarios, String nome, String email, String senha, String tipo, String cadastro,
             String razaoSocial, String plano, String mensalidade) throws Exception{
-		//Valores nulos
-		if(nome.isEmpty() || nome.isBlank())
-			throw new NomeNuloException();
-		else if(email.isEmpty())
-			throw new EmailNuloException();
-		else if(senha.isEmpty() || senha.isBlank())
-			throw new SenhaNulaException();
-		else if(cadastro.isEmpty()) {
-			if(tipo.equals("pessoaFisica"))
-				throw new CpfNuloException();
-			else
-				throw new CnpjNuloException();
-		}
-		else if(tipo.equals("pessoaJuridica") && razaoSocial != null && razaoSocial.isEmpty())
-			throw new RazaoSocialNulaException();
 		
 		//Valores invalidos
-		else if(!email.endsWith(".com") || !email.contains("@"))
+		if(!email.endsWith(".com") || !email.contains("@"))
 			throw new EmailInvalidoException();
 		else if((!tipo.equals("pessoaFisica") && !tipo.equals("pessoaJuridica")) || (razaoSocial != null && tipo.equals("pessoaFisica")) || (razaoSocial == null && tipo.equals("pessoaJuridica")))
 			throw new TipoInvalidoException();			
@@ -93,9 +78,35 @@ public class Validador {
 			throw new NaoUsaSaldoException();
 	}
 	
-	public static void email(String email) throws Exception {
-		if(email.isEmpty() || email.isBlank())
-			throw new EmailNuloException();
+	public static void nulo(String atributo, Supplier<? extends Exception> e) throws Exception{
+		if(atributo.isEmpty() || atributo.isBlank())
+			e.get();
+	}
+	
+	public static void nome(String nome) throws Exception {
+		Validador.nulo(nome, NomeNuloException::new);
+	}
+	
+	public static void email(String email) throws Exception{
+		Validador.nulo(email, EmailNuloException::new);
+		if(!email.endsWith(".com") || !email.contains("@"))
+			throw new EmailInvalidoException();
+	}
+	
+	public static void senha(String senha) throws Exception{
+		Validador.nulo(senha, SenhaNulaException::new);
+	}
+	
+	public static void cpf(String cpf) throws Exception {
+		Validador.nulo(cpf, CpfNuloException::new);
+	}
+	
+	public static void cnpj(String cnpj) throws Exception {	
+		Validador.nulo(cnpj, CnpjNuloException::new);
+	}
+	
+	public static void razaoSocial(String razaoSocial) throws Exception {
+		Validador.nulo(razaoSocial, RazaoSocialNulaException::new);
 	}
 	
 	public static void mensalidade(Usuario usuario) throws Exception{

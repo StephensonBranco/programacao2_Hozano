@@ -48,8 +48,8 @@ public class Facade {
     // US3 - Alteracao de usuario (inclui metodo de pagamento)
     // =====================================================================
 
-    public void alterarUsuario(String usuario, String atributo, String valor) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public void alterarUsuario(String usuario, String atributo, String valor) throws Exception {
+        sistema.alterarUsuario(usuario, atributo, valor);
     }
 
     public void alterarUsuario(String usuario, String atributo, String valor1, String chave) {

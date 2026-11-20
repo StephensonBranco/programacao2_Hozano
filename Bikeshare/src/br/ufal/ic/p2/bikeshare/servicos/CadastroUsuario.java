@@ -46,4 +46,12 @@ public class CadastroUsuario {
 		String id = repo.adicionar(usuario);
 		return id;
 	}
+	
+	public void alterarUsuario(String usuario, String atributo, String valor) throws Exception {
+		Usuario user = repo.getUsuario(usuario);
+		switch (atributo) {
+			case "nome" -> user.setNome(valor);
+		
+		}
+	}
 }
