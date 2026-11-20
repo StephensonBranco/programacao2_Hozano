@@ -15,9 +15,9 @@ import br.ufal.ic.p2.bikeshare.models.Usuario;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
-public class CadastroUsuario {
+public class CadastroUsuarios {
 	private final Repositorio repo;
-	public CadastroUsuario(Repositorio repo) {
+	public CadastroUsuarios(Repositorio repo) {
 		this.repo = repo;
 	}
 	
@@ -44,7 +44,7 @@ public class CadastroUsuario {
 				throw new TipoInvalidoException();
 		}
 		
-		String id = repo.adicionar(usuario);
+		String id = repo.adicionarUsuario(usuario);
 		return id;
 	}
 	

@@ -11,9 +11,9 @@ import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 import br.ufal.ic.p2.bikeshare.exception.*;
 
-public class Consulta {
+public class ConsultaUsuarios {
 	private final Repositorio repo; 
-	public Consulta(Repositorio repo) {
+	public ConsultaUsuarios(Repositorio repo) {
 		this.repo = repo;
 	}
 	

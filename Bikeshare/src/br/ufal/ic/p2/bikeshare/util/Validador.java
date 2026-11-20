@@ -4,13 +4,18 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.List;
 
+import br.ufal.ic.p2.bikeshare.exception.CapacidadeNaoNumerica;
+import br.ufal.ic.p2.bikeshare.exception.CapacidadeNegativaException;
+import br.ufal.ic.p2.bikeshare.exception.CapacidadeNulaException;
 import br.ufal.ic.p2.bikeshare.exception.ChavePixNulaException;
 import br.ufal.ic.p2.bikeshare.exception.CnpjNuloException;
 import br.ufal.ic.p2.bikeshare.exception.CpfNuloException;
 import br.ufal.ic.p2.bikeshare.exception.EmailInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailJaCadastradoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailNuloException;
-import br.ufal.ic.p2.bikeshare.exception.IdentificacaoNulaException;
+import br.ufal.ic.p2.bikeshare.exception.EnderecoNuloException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoEstacaoNulaException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoUsuarioNulaException;
 import br.ufal.ic.p2.bikeshare.exception.MensalidadeNaoNumericaException;
 import br.ufal.ic.p2.bikeshare.exception.MensalidadeNegativaException;
 import br.ufal.ic.p2.bikeshare.exception.MensalidadeNulaException;
@@ -120,8 +125,8 @@ public class Validador {
 		Validador.nulo(razaoSocial, RazaoSocialNulaException::new);
 	}
 	
-	public static void id(String id) throws Exception{
-		Validador.nulo(id, IdentificacaoNulaException::new);
+	public static void idUsuario(String id) throws Exception{
+		Validador.nulo(id, IdentificacaoUsuarioNulaException::new);
 	}
 	
 	public static void plano(String plano) throws Exception {
@@ -170,6 +175,21 @@ public class Validador {
 	public static void saldo(String saldo) throws Exception {	
 		Validador.nulo(saldo, SaldoNuloException::new);
 		Validador.numericoPositivo(saldo, SaldoNaoNumericoException::new, SaldoNegativoException::new);
+	}
+	
+	public static void endereco(String endereco) throws Exception {
+		Validador.nulo(endereco, EnderecoNuloException::new);
+	}
+	
+	public static void capacidade(String capacidade) throws Exception {
+		Validador.nulo(capacidade, CapacidadeNulaException::new);
+		if(!capacidade.matches("-?\\d+"))
+			throw new CapacidadeNaoNumerica();
+		Validador.positivo(capacidade, CapacidadeNegativaException::new);
+	}
+	
+	public static void idEstacao(String id) throws Exception{
+		Validador.nulo(id, IdentificacaoEstacaoNulaException::new);
 	}
 	
 	public static void pessoaFisica(Usuario usuario) throws Exception{
