@@ -28,7 +28,8 @@ public class Consulta {
 			case "estado" -> usuario.getEstado();
 			case "plano" -> usuario.getPlano();
 			case "mensalidade" ->  {
-				Validador.mensalidade(usuario);
+				if(!usuario.getPlano().equals("assinante"))
+					throw new PlanoNaoPossuiMensalidadeException();
 				yield Formatador.doubleToString(usuario.getMensalidade());
 			}
 			case "cpf" -> {

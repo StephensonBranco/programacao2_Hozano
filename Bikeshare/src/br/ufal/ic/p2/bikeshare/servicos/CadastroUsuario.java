@@ -17,27 +17,20 @@ public class CadastroUsuario {
 								String razaoSocial, String plano, String mensalidade) throws Exception {
 		
 		Usuario usuario;
-		Double mensal = null;
 		
 		//Valores padrões
 		if(plano==null)
 			plano = "avulso";
 		
-		//Validação geral 
-		Validador.criacao(repo.getListaUsuarios(), nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
-		
-		if(plano.equals("assinante"))
-			mensal = Formatador.stringToDouble(mensalidade);
-		else
-			mensal = null;
-		
+		//procurando tipos repetidos
+		Validador.emailRepetido(repo.getListaUsuarios(), email);
 		
 		switch (tipo) {
 			case "pessoaFisica":
-				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, plano, mensal);
+				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
 				break;
 			case "pessoaJuridica":
-				usuario = new PessoaJuridica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensal);
+				usuario = new PessoaJuridica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
 				break;
 			default:
 				throw new TipoInvalidoException();

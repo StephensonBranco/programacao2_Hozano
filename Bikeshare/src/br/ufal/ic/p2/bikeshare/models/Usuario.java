@@ -1,13 +1,14 @@
 package br.ufal.ic.p2.bikeshare.models;
 
+import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
-public class Usuario {
+public abstract class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
 	private String tipo;
-	private String cadastro;
+	protected String cadastro;
 	private String estado;
 	private String plano;
 	private Double mensalidade;
@@ -22,12 +23,11 @@ public class Usuario {
 		
 	}
 	
-	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String plano, Double mensalidade) {
+	public Usuario(String nome, String email, String senha, String tipo, String cadastro, String plano, String mensalidade) throws Exception{
 		setNome(nome);
 		setEmail(email);
 		setSenha(senha);
 		setTipo(tipo);
-		setCadastro(cadastro);
 		setEstado("ativo");
 		setPlano(plano);
 		setMensalidade(mensalidade);
@@ -42,38 +42,47 @@ public class Usuario {
 	public String getNome() {
 		return nome;
 	}
+	
 	public void setNome(String nome) throws Exception {
 		Validador.nome(nome);
 		this.nome = nome;
 	}
+	
 	public String getEmail() {
 		return email;
 	}
+	
 	public void setEmail(String email) throws Exception {
 		Validador.email(email);
 		this.email = email;
 	}
+	
 	public String getSenha() {
 		return senha;
 	}
+	
 	public void setSenha(String senha) throws Exception {
-		Validador.email(email);
+		Validador.senha(senha);
 		this.senha = senha;
 	}
+	
 	public String getTipo() {
 		return tipo;
 	}
-	public void setTipo(String tipo) {
+	
+	public void setTipo(String tipo) throws Exception {
 		this.tipo = tipo;
 	}
+	
 	public String getCadastro() {
 		return cadastro;
 	}
 	
 	//CPF E CNPJ NAS SUBCLASSES
-	public void setCadastro(String cadastro) {
-		this.cadastro = cadastro;
-	}
+	public abstract void setCadastro(String cadastro) throws Exception;
+	
+	//Tratar erro sobre pessoaFisica com razaoSocial
+	public abstract void setRazaoSocial(String razaoSocial) throws Exception;
 	
 
 	public String getEstado() {
@@ -88,14 +97,21 @@ public class Usuario {
 		return plano;
 	}
 
-	public void setPlano(String plano) {
+	public void setPlano(String plano) throws Exception {
+		Validador.plano(plano);
 		this.plano = plano;
 	}
 
 	public Double getMensalidade() {
-		return mensalidade;
+		return this.mensalidade;
 	}
 
+	public void setMensalidade(String mensalidade) throws Exception {
+		Validador.mensalidade(mensalidade, this.plano);
+		this.mensalidade = Formatador.stringToDouble(mensalidade);
+	}
+	
+	//Para o XML
 	public void setMensalidade(Double mensalidade) {
 		this.mensalidade = mensalidade;
 	}

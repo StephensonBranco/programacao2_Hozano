@@ -31,35 +31,8 @@ public class Validador {
 		
 	}
 	
-	public static void criacao(Map<String, Usuario> usuarios, String nome, String email, String senha, String tipo, String cadastro,
-            String razaoSocial, String plano, String mensalidade) throws Exception{
-		
-		//Valores invalidos
-		if(!email.endsWith(".com") || !email.contains("@"))
-			throw new EmailInvalidoException();
-		else if((!tipo.equals("pessoaFisica") && !tipo.equals("pessoaJuridica")) || (razaoSocial != null && tipo.equals("pessoaFisica")) || (razaoSocial == null && tipo.equals("pessoaJuridica")))
-			throw new TipoInvalidoException();			
-		else if(!plano.equals("avulso") && !plano.equals("assinante"))
-			throw new PlanoInvalidoException();
-		else if(!plano.equals("assinante") && mensalidade != null && !mensalidade.isEmpty())
-			throw new PlanoNaoPossuiMensalidadeException();
-		
-		//Valores numericos invalidos
-		else if(plano.equals("assinante")) {
-			numerico(mensalidade, MensalidadeNulaException::new, MensalidadeNaoNumericaException::new, MensalidadeNegativaException::new);			
-		}
-		
-		//Valores ja existentes
-		else if(usuarios.values().stream().anyMatch(user -> user.getEmail().equalsIgnoreCase(email))) {
-			throw new EmailJaCadastradoException();
-		}
-	}
-	
-	public static void numerico(String valor, Supplier<? extends Exception> nulo, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> negativo) throws Exception{
-		if(valor == null || valor.isEmpty()) { 
-			throw nulo.get();
-		}
-		else if(!valor.matches("-?\\d+(\\,\\d+)?")){
+	public static void numerico(String valor, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> negativo) throws Exception{
+		if(!valor.matches("-?\\d+(\\,\\d+)?")){
 			throw naoNumerico.get();
 		}
 		else if(valor.charAt(0)=='-'){
@@ -78,9 +51,15 @@ public class Validador {
 			throw new NaoUsaSaldoException();
 	}
 	
+	public static void emailRepetido(Map<String, Usuario> usuarios, String email) throws Exception{
+		if(usuarios.values().stream().anyMatch(user -> user.getEmail().equalsIgnoreCase(email))) {
+			throw new EmailJaCadastradoException();
+		}
+	}
+	
 	public static void nulo(String atributo, Supplier<? extends Exception> e) throws Exception{
-		if(atributo.isEmpty() || atributo.isBlank())
-			e.get();
+		if(atributo == null || atributo.isEmpty() || atributo.isBlank())
+			throw e.get();
 	}
 	
 	public static void nome(String nome) throws Exception {
@@ -106,17 +85,30 @@ public class Validador {
 	}
 	
 	public static void razaoSocial(String razaoSocial) throws Exception {
+		if(razaoSocial==null)
+			throw new TipoInvalidoException();
 		Validador.nulo(razaoSocial, RazaoSocialNulaException::new);
 	}
 	
-	public static void mensalidade(Usuario usuario) throws Exception{
-		if(!usuario.getPlano().equals("assinante")) 
-			throw new NaoPossuiMensalidadeException();
+	public static void id(String id) throws Exception{
+		Validador.nulo(id, IdentificacaoNulaException::new);
 	}
 	
-	public static void id(String id) throws Exception{
-		if(id.isEmpty())
-			throw new IdentificacaoNulaException();
+	public static void plano(String plano) throws Exception {
+		if(!plano.equals("avulso") && !plano.equals("assinante"))
+			throw new PlanoInvalidoException();
+	}
+	
+	public static void mensalidade(String mensalidade, String plano) throws Exception{
+		if(plano.equals("assinante")) {
+			Validador.nulo(mensalidade, MensalidadeNulaException::new);
+			Validador.numerico(mensalidade, MensalidadeNaoNumericaException::new, MensalidadeNegativaException::new);
+		}
+		else {
+			if(mensalidade != null && !mensalidade.isEmpty())
+				throw new PlanoNaoPossuiMensalidadeException();
+		}
+		
 	}
 	
 	public static void pessoaFisica(Usuario usuario) throws Exception{
