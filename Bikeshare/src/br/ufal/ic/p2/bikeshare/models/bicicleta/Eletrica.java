@@ -29,7 +29,7 @@ public class Eletrica extends Bicicleta {
 
 	@Override
 	public boolean estaDisponivel() {
-		return (estado.equals("disponivel")) && (nivelBateria > 0);
+		return (estado.equals("disponivel")) && (nivelBateria >= 15);
 	}
 	
 }
