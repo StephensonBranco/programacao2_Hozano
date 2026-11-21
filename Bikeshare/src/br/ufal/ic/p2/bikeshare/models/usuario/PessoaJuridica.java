@@ -1,4 +1,4 @@
-package br.ufal.ic.p2.bikeshare.models;
+package br.ufal.ic.p2.bikeshare.models.usuario;
 
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
@@ -21,8 +21,7 @@ public class PessoaJuridica extends Usuario {
 		Validador.cnpj(cnpj);
 		this.cadastro = cnpj;
 	}
-	
-	@Override
+
 	public void setRazaoSocial(String razaoSocial) throws Exception {
 		Validador.razaoSocial(razaoSocial);
 		this.razaoSocial = razaoSocial;

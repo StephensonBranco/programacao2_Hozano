@@ -1,5 +1,6 @@
-package br.ufal.ic.p2.bikeshare.models;
+package br.ufal.ic.p2.bikeshare.models.usuario;
 
+import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
@@ -78,12 +79,7 @@ public abstract class Usuario {
 		return cadastro;
 	}
 	
-	//CPF E CNPJ NAS SUBCLASSES
 	public abstract void setCadastro(String cadastro) throws Exception;
-	
-	//Tratar erro sobre pessoaFisica com razaoSocial
-	public abstract void setRazaoSocial(String razaoSocial) throws Exception;
-	
 
 	public String getEstado() {
 		return estado;

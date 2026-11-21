@@ -2,28 +2,28 @@ package br.ufal.ic.p2.bikeshare.servicos;
 
 public class Sistema {
 	private final Repositorio repo = new Repositorio();
-	private final CadastroUsuarios cadastroUsuario = new CadastroUsuarios(repo);
+	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repo);
 	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repo);
-	private final CadastroEstacoes cadastroEstacao = new CadastroEstacoes(repo);
+	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repo);
 	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repo);
 	
 	/////////////
 	///Alteram o sistema
 	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro,
             String razaoSocial, String plano, String mensalidade) throws Exception{
-		return cadastroUsuario.criarUsuario(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
+		return cadastroUsuarios.criarUsuario(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
 	}
 	
 	public void alterarUsuario(String usuario, String atributo, String valor) throws Exception {
-		cadastroUsuario.alterarUsuario(usuario, atributo, valor);
+		cadastroUsuarios.alterarUsuario(usuario, atributo, valor);
 	}
 	
 	public void alterarUsuario(String usuario, String atributo, String valor1, String valor2) throws Exception {
-		cadastroUsuario.alterarUsuario(usuario, atributo, valor1, valor2);
+		cadastroUsuarios.alterarUsuario(usuario, atributo, valor1, valor2);
 	}
 	
 	public void alterarUsuario(String usuario, String atributo, String valor, String numeroCartao, String validadeCartao) throws Exception {
-		cadastroUsuario.alterarUsuario(usuario, atributo, valor, numeroCartao, validadeCartao);
+		cadastroUsuarios.alterarUsuario(usuario, atributo, valor, numeroCartao, validadeCartao);
 	}
 	
 	public void removerUsuario(String usuario) throws Exception {
@@ -31,7 +31,15 @@ public class Sistema {
 	}
 	
 	public String criarEstacao(String nome, String endereco, String capacidade) throws Exception {
-		return cadastroEstacao.criarEstacao(nome, endereco, capacidade);
+		return cadastroEstacoes.criarEstacao(nome, endereco, capacidade);
+	}
+	
+	public void adicionarBicicleta(String estacao, String bicicleta, String tipo, String nivelBateria) throws Exception {
+		cadastroEstacoes.criarBicicleta(estacao, bicicleta, tipo, nivelBateria);
+	}
+	
+	public void removerBicicleta(String estacao, String bicicleta) throws Exception{
+		repo.removerBicicleta(estacao, bicicleta);
 	}
 	
 	public void zerarSistema() {
@@ -54,6 +62,14 @@ public class Sistema {
 	
 	public String getBicicletasDisponiveis(String estacao) throws Exception {
 		return consultaEstacoes.getBicicletasDisponiveis(estacao);
+	}
+	
+	public String getAtributoBicicleta(String bicicleta, String atributo) throws Exception {
+		return consultaEstacoes.getAtributoBicicleta(bicicleta, atributo);
+	}
+	
+	public String getEstadoBicicleta(String bicicleta) throws Exception {
+		return consultaEstacoes.getAtributoBicicleta(bicicleta, "estado");
 	}
 	
 	public void encerrarSistema() {

@@ -9,9 +9,9 @@ import br.ufal.ic.p2.bikeshare.exception.MetodoPagamentoInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.SaldoNaoNumericoException;
 import br.ufal.ic.p2.bikeshare.exception.SaldoNegativoException;
 import br.ufal.ic.p2.bikeshare.exception.TipoInvalidoException;
-import br.ufal.ic.p2.bikeshare.models.PessoaFisica;
-import br.ufal.ic.p2.bikeshare.models.PessoaJuridica;
-import br.ufal.ic.p2.bikeshare.models.Usuario;
+import br.ufal.ic.p2.bikeshare.models.usuario.PessoaFisica;
+import br.ufal.ic.p2.bikeshare.models.usuario.PessoaJuridica;
+import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
@@ -35,7 +35,9 @@ public class CadastroUsuarios {
 		
 		switch (tipo) {
 			case "pessoaFisica":
-				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);
+				if(razaoSocial!=null)
+					throw new TipoInvalidoException();
+				usuario = new PessoaFisica(nome, email, senha, tipo, cadastro, plano, mensalidade);
 				break;
 			case "pessoaJuridica":
 				usuario = new PessoaJuridica(nome, email, senha, tipo, cadastro, razaoSocial, plano, mensalidade);

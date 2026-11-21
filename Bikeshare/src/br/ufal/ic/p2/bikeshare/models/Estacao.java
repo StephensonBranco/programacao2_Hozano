@@ -1,15 +1,17 @@
 package br.ufal.ic.p2.bikeshare.models;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
+import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoExisteException;
+import br.ufal.ic.p2.bikeshare.exception.EstacaoSemVagasException;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class Estacao {
 	private String nome;
 	private String endereco;
 	private int capacidade;
-	private Map<String, Bicicleta> bicicletas = new LinkedHashMap<>();
+	private List<String> bicicletas = new ArrayList<>();
 	
 	public Estacao() {
 		
@@ -20,7 +22,17 @@ public class Estacao {
 		setEndereco(endereco);
 		setCapacidade(capacidade);
 	}
-
+	
+	public void removerBicicleta(String bicicleta) throws BicicletaNaoExisteException {
+		bicicletas.remove(bicicleta);
+	}
+	
+	public void adicionarBicicleta(String bicicleta) throws EstacaoSemVagasException {
+		if(capacidade==bicicletas.size())
+			throw new EstacaoSemVagasException();
+		bicicletas.add(bicicleta);
+	}
+	
 	public String getNome() {
 		return nome;
 	}
@@ -53,12 +65,11 @@ public class Estacao {
 		this.capacidade = Integer.parseInt(capacidade);
 	}
 
-	public Map<String, Bicicleta> getBicicletas() {
-		return new LinkedHashMap<String, Bicicleta>(this.bicicletas);
+	public List<String> getBicicletas() {
+		return new ArrayList<String>(this.bicicletas);
 	}
 
-	//Usado no XML
-	public void setBicicletas(Map<String, Bicicleta> bicicletas) {
+	public void setBicicletas(List<String> bicicletas) {
 		this.bicicletas = bicicletas;
 	}
 }

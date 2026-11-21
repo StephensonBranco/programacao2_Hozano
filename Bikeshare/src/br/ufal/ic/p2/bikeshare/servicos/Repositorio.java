@@ -12,28 +12,35 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.beans.XMLDecoder;
 
+import br.ufal.ic.p2.bikeshare.exception.BicicleNaoEstaNaEstacaoException;
+import br.ufal.ic.p2.bikeshare.exception.BicicletaJaExisteException;
+import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
 import br.ufal.ic.p2.bikeshare.exception.EstacaoNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Estacao;
-import br.ufal.ic.p2.bikeshare.models.Usuario;
+import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
+import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class Repositorio {
 	private static final File ARQUIVO_USUARIOS = new File("XML/usuarios.xml");
 	private static final File ARQUIVO_ESTACOES = new File("/XML/estacoes.xml");
+	private static final File ARQUIVO_BICICLETAS = new File("/XML/bicicletas.xml");
 	private static final File ARQUIVO_ID_USUARIOS = new File("XML/id_usuarios.xml");
 	private static final File ARQUIVO_ID_ESTACOES = new File("XML/id_estacoes.xml");
 	
 	private Map<String, Usuario> usuarios;
 	private Map<String, Estacao> estacoes;
+	private Map<String, Bicicleta> bicicletas;
 	private int id_atual_usuarios;	//para retornar o id de um novo usuário a partir do mais novo
 	private int id_atual_estacoes;
 	
 	public Repositorio() {
 		usuarios = carregar(ARQUIVO_USUARIOS, new LinkedHashMap<>());
 		estacoes = carregar(ARQUIVO_ESTACOES, new LinkedHashMap<>());
+		bicicletas = carregar(ARQUIVO_BICICLETAS, new LinkedHashMap<>());
 		id_atual_usuarios = carregar(ARQUIVO_ID_USUARIOS, 1);
 		id_atual_estacoes = carregar(ARQUIVO_ID_ESTACOES, 1);
 	}
@@ -41,10 +48,26 @@ public class Repositorio {
 	public void salvar()  {
 		gravar(ARQUIVO_USUARIOS, usuarios);
 		gravar(ARQUIVO_ESTACOES, estacoes);
+		gravar(ARQUIVO_BICICLETAS, bicicletas);
 		gravar(ARQUIVO_ID_USUARIOS, id_atual_usuarios);
 		gravar(ARQUIVO_ID_ESTACOES, id_atual_estacoes);
 	}
 
+	public void removerBicicleta(String estacao, String bicicleta) throws Exception {
+		Validador.idEstacao(estacao);
+		Validador.idBicicleta(bicicleta);
+		
+		if(!estacoes.containsKey(estacao))
+			throw new EstacaoNaoExisteException();
+		if(!bicicletas.containsKey(bicicleta))
+			throw new BicicletaNaoExisteException();
+		if(!bicicletas.get(bicicleta).getEstacao().equals(estacao))
+			throw new BicicleNaoEstaNaEstacaoException();
+		
+		estacoes.get(estacao).removerBicicleta(bicicleta);
+		bicicletas.remove(bicicleta);
+	}
+	
 	public void removerUsuario(String usuario) throws Exception{
 		Validador.idUsuario(usuario);
 		if(!usuarios.containsKey(usuario)) {
@@ -70,6 +93,16 @@ public class Repositorio {
 		return adicionar(estacoes, "E", estacao, id_atual_estacoes++);
 	}
 	
+	//id é o nome da bicicleta "bc1, be1..."
+	public void adicionarBicicleta(String estacao, String id, Bicicleta bicicleta) throws Exception {
+		Estacao station = getEstacao(estacao);
+		Validador.idBicicleta(id);
+		if(bicicletas.containsKey(id))
+			throw new BicicletaJaExisteException();
+		station.adicionarBicicleta(id);
+		bicicletas.put(id, bicicleta);
+	}
+	
 	//Pega um usuário do banco a partir do id dele
 	private <T> T getElemento(Map<String, T> lista, String key, Supplier<? extends Exception> e) throws Exception{
 		T elemento = lista.get(key);
@@ -89,6 +122,11 @@ public class Repositorio {
 		return getElemento(estacoes, key, EstacaoNaoExisteException::new);
 	}
 	
+	public Bicicleta getBicicleta(String key) throws Exception {
+		Validador.idBicicleta(key);
+		return getElemento(bicicletas, key, BicicletaNaoExisteException::new);
+	}
+	
 	//Dá uma cópia dos usuários
 	public Map<String, Usuario> getListaUsuarios() {
 		return new LinkedHashMap<String, Usuario>(usuarios);
@@ -101,6 +139,7 @@ public class Repositorio {
 	public void zerarSistema() {
 		usuarios.clear();
 		estacoes.clear();
+		bicicletas.clear();
 		id_atual_usuarios = 1;
 		id_atual_estacoes = 1;
 	}
