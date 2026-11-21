@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.List;
 
+import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoPossuiBateriaException;
 import br.ufal.ic.p2.bikeshare.exception.CapacidadeNaoNumerica;
 import br.ufal.ic.p2.bikeshare.exception.CapacidadeNegativaException;
 import br.ufal.ic.p2.bikeshare.exception.CapacidadeNulaException;
@@ -14,6 +15,7 @@ import br.ufal.ic.p2.bikeshare.exception.EmailInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailJaCadastradoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailNuloException;
 import br.ufal.ic.p2.bikeshare.exception.EnderecoNuloException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoBicicletaNulaException;
 import br.ufal.ic.p2.bikeshare.exception.IdentificacaoEstacaoNulaException;
 import br.ufal.ic.p2.bikeshare.exception.IdentificacaoUsuarioNulaException;
 import br.ufal.ic.p2.bikeshare.exception.MensalidadeNaoNumericaException;
@@ -25,6 +27,9 @@ import br.ufal.ic.p2.bikeshare.exception.NaoEhJuridicaException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaCartaoException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaPixException;
 import br.ufal.ic.p2.bikeshare.exception.NaoUsaSaldoException;
+import br.ufal.ic.p2.bikeshare.exception.NivelBateriaForaDosLimitesException;
+import br.ufal.ic.p2.bikeshare.exception.NivelBateriaNaoNumericoException;
+import br.ufal.ic.p2.bikeshare.exception.NivelBateriaNuloException;
 import br.ufal.ic.p2.bikeshare.exception.NomeNuloException;
 import br.ufal.ic.p2.bikeshare.exception.NumeroCartaoNuloException;
 import br.ufal.ic.p2.bikeshare.exception.PlanoInvalidoException;
@@ -36,10 +41,13 @@ import br.ufal.ic.p2.bikeshare.exception.SaldoNuloException;
 import br.ufal.ic.p2.bikeshare.exception.SenhaNulaException;
 import br.ufal.ic.p2.bikeshare.exception.TipoInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.ValidadeCartaoNulaException;
+import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
+import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
 import br.ufal.ic.p2.bikeshare.exception.ValidadeCartaoInvalidaException;
-import br.ufal.ic.p2.bikeshare.models.Usuario;
 
 public class Validador {
+	private static String FRACAO = "(\\,\\d+)?";
+	
 	public Validador() {
 		
 	}
@@ -57,20 +65,30 @@ public class Validador {
 		}
 	}
 	
-	public static void numerico(String valor, Supplier<? extends Exception> naoNumerico) throws Exception{
-		if(!valor.matches("-?\\d+(\\,\\d+)?"))
+	public static void numerico(String valor, Supplier<? extends Exception> naoNumerico, String sufixo) throws Exception{
+		if(!valor.matches("-?\\d+" + sufixo))
 			throw naoNumerico.get();
 	}
 	//
 	
 	//Packs de validação para numeros
 	public static void numericoPositivo(String valor, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> naoPositivo) throws Exception{
-		Validador.numerico(valor, naoNumerico);
+		Validador.numerico(valor, naoNumerico, FRACAO);
 		Validador.positivo(valor, naoPositivo);
 	}
 	
 	public static void numericoNaoNegativo(String valor, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> negativo) throws Exception{
-		Validador.numerico(valor, naoNumerico);
+		Validador.numerico(valor, naoNumerico, FRACAO);
+		Validador.naoNegativo(valor, negativo);
+	}
+	
+	public static void numericoPositivoInteiro(String valor, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> naoPositivo) throws Exception{
+		Validador.numerico(valor, naoNumerico, "");
+		Validador.positivo(valor, naoPositivo);
+	}
+	
+	public static void numericoNaoNegativoInteiro(String valor, Supplier<? extends Exception> naoNumerico, Supplier<? extends Exception> negativo) throws Exception{
+		Validador.numerico(valor, naoNumerico, "");
 		Validador.naoNegativo(valor, negativo);
 	}
 	//
@@ -183,13 +201,22 @@ public class Validador {
 	
 	public static void capacidade(String capacidade) throws Exception {
 		Validador.nulo(capacidade, CapacidadeNulaException::new);
-		if(!capacidade.matches("-?\\d+"))
-			throw new CapacidadeNaoNumerica();
-		Validador.positivo(capacidade, CapacidadeNegativaException::new);
+		Validador.numericoPositivoInteiro(capacidade, CapacidadeNaoNumerica::new, CapacidadeNegativaException::new);
 	}
 	
 	public static void idEstacao(String id) throws Exception{
 		Validador.nulo(id, IdentificacaoEstacaoNulaException::new);
+	}
+	
+	public static void idBicicleta(String id) throws Exception{
+		Validador.nulo(id, IdentificacaoBicicletaNulaException::new);
+	}
+	
+	public static void nivelBateria(String nivelBateria) throws Exception {
+		Validador.nulo(nivelBateria, NivelBateriaNuloException::new);
+		Validador.numericoNaoNegativoInteiro(nivelBateria, NivelBateriaNaoNumericoException::new, NivelBateriaForaDosLimitesException::new);
+		if(Integer.parseInt(nivelBateria) > 100)
+			throw new NivelBateriaForaDosLimitesException();
 	}
 	
 	public static void pessoaFisica(Usuario usuario) throws Exception{
@@ -200,5 +227,10 @@ public class Validador {
 	public static void pessoaJuridica(Usuario usuario) throws Exception{
 		if(!usuario.getTipo().equals("pessoaJuridica"))
 			throw new NaoEhJuridicaException();
+	}
+	
+	public static void eletrica(Bicicleta bicicleta) throws Exception {
+		if(!bicicleta.getTipo().equals("eletrica"))
+			throw new BicicletaNaoPossuiBateriaException();
 	}
 }
