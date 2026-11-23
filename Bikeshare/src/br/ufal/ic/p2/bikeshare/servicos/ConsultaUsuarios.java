@@ -7,18 +7,19 @@ import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.models.usuario.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioUsuarios;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 import br.ufal.ic.p2.bikeshare.exception.*;
 
 public class ConsultaUsuarios {
-	private final Repositorio repo; 
-	public ConsultaUsuarios(Repositorio repo) {
-		this.repo = repo;
+	private final RepositorioUsuarios repoUsuarios; 
+	public ConsultaUsuarios(RepositorioUsuarios repoUsuarios) {
+		this.repoUsuarios = repoUsuarios;
 	}
 	
 	public String getAtributoUsuario(String id, String atributo) throws Exception{
-		Usuario usuario = repo.getUsuario(id);
+		Usuario usuario = repoUsuarios.get(id);
 		
 		return switch (atributo) {
 			case "nome" -> usuario.getNome();
@@ -72,7 +73,7 @@ public class ConsultaUsuarios {
 	public String getUsuarioPorEmail(String email) throws Exception{
 		Validador.nulo(email, EmailNuloException::new);
 		
-		Map<String, Usuario> usuarios = repo.getListaUsuarios();
+		Map<String, Usuario> usuarios = repoUsuarios.getLista();
 		String id = usuarios.
 				entrySet().
 				stream().

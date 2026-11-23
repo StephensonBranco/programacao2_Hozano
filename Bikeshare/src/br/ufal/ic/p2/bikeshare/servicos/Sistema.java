@@ -1,11 +1,22 @@
 package br.ufal.ic.p2.bikeshare.servicos;
 
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioAlugueis;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioBicicletas;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioEstacoes;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioUsuarios;
+
 public class Sistema {
-	private final Repositorio repo = new Repositorio();
-	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repo);
-	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repo);
-	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repo);
-	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repo);
+	private final RepositorioUsuarios repoUsuarios = new RepositorioUsuarios();
+	private final RepositorioEstacoes repoEstacoes = new RepositorioEstacoes();
+	private final RepositorioBicicletas repoBicicletas= new RepositorioBicicletas(repoEstacoes);
+	private final RepositorioAlugueis repoAlugueis= new RepositorioAlugueis(repoUsuarios, repoBicicletas);
+
+	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repoUsuarios);
+	private final CadastroBicicletas cadastroBicicletas = new CadastroBicicletas(repoBicicletas);
+	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repoEstacoes);
+	private final CadastroAlugueis cadastroAlugueis = new CadastroAlugueis(repoUsuarios, repoBicicletas, repoAlugueis);
+	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repoUsuarios);
+	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repoEstacoes);
 	
 	/////////////
 	///Alteram o sistema

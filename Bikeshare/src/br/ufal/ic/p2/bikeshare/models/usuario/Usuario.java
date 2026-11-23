@@ -1,5 +1,6 @@
 package br.ufal.ic.p2.bikeshare.models.usuario;
 
+import br.ufal.ic.p2.bikeshare.exception.UsuarioJaPossuiAluguelException;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
@@ -127,7 +128,9 @@ public abstract class Usuario {
 		return aluguelAtivo;
 	}
 
-	public void setAluguelAtivo(String aluguelAtivo) {
+	public void setAluguelAtivo(String aluguelAtivo) throws UsuarioJaPossuiAluguelException {
+		if(this.aluguelAtivo != null & !"nenhum".equals(this.aluguelAtivo))
+			throw new UsuarioJaPossuiAluguelException();
 		this.aluguelAtivo = aluguelAtivo;
 	}
 
