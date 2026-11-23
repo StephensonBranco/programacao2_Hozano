@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import br.ufal.ic.p2.bikeshare.exception.UsuarioComAluguelAtivoException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
 import br.ufal.ic.p2.bikeshare.util.Validador;
@@ -37,9 +38,10 @@ public class RepositorioUsuarios implements Repositorio<Usuario>{
 	@Override
 	public void remover(String usuario) throws Exception {
 		Validador.idUsuario(usuario);
-		if(!usuarios.containsKey(usuario)) {
+		if(!usuarios.containsKey(usuario))
 			throw new UsuarioNaoExisteException();
-		}
+		else if(usuarios.get(usuario).getAluguelAtivo() != null)
+			throw new UsuarioComAluguelAtivoException();
 		usuarios.remove(usuario);
 	}
 

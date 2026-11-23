@@ -18,7 +18,7 @@ public class ConsultaUsuarios {
 		this.repoUsuarios = repoUsuarios;
 	}
 	
-	public String getAtributoUsuario(String id, String atributo) throws Exception{
+	public String getAtributo(String id, String atributo) throws Exception{
 		Usuario usuario = repoUsuarios.get(id);
 		
 		return switch (atributo) {

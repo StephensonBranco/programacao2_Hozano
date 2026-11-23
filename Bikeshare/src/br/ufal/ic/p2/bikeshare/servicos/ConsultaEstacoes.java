@@ -5,60 +5,37 @@ import br.ufal.ic.p2.bikeshare.models.Aluguel;
 import br.ufal.ic.p2.bikeshare.models.Estacao;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Eletrica;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioBicicletas;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioEstacoes;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class ConsultaEstacoes {
-	private final Repositorio repo;
+	private final RepositorioEstacoes repoEstacoes;
+	private final RepositorioBicicletas repoBicicletas;
 	
-	public ConsultaEstacoes(Repositorio repo) {
-		this.repo = repo;
+	public ConsultaEstacoes(RepositorioEstacoes repoEstacoes, RepositorioBicicletas repoBicicletas) {
+		this.repoEstacoes = repoEstacoes;
+		this.repoBicicletas = repoBicicletas;
 	}
 	
+	//Quantas vagas estão disponíveis na estação
 	public String getVagasDisponiveis(String estacao) throws Exception {
-		Estacao station = repo.getEstacao(estacao);
+		Estacao station = repoEstacoes.get(estacao);
 		return String.valueOf(station.getCapacidade() - station.getBicicletas().size());
 	}
 	
+	//Quantas bicicletas da estação estão disponíveis para alugar
 	public String getBicicletasDisponiveis(String estacao) throws Exception {
-		Estacao station = repo.getEstacao(estacao);
+		Estacao station = repoEstacoes.get(estacao);
 		
 		int q = 0;
 		
 		for(String id : station.getBicicletas()) {
-			if(repo.getBicicleta(id).estaDisponivel())
+			if(repoBicicletas.get(id).estaDisponivel())
 				q++;
 		}
 		
 		return String.valueOf(q);
-	}
-	
-	public String getAtributoBicicleta(String bicicleta, String atributo) throws Exception {
-		Bicicleta bike = repo.getBicicleta(bicicleta);
-		return switch (atributo) {
-			case "tipo" -> bike.getTipo();
-			case "estado" -> bike.getEstado();
-			case "estacao" -> bike.getEstacao();
-			case "nivelBateria" -> {
-				Validador.eletrica(bike);
-				yield String.valueOf(((Eletrica)bike).getNivelBateria());
-			}
-			default -> throw new AtributoNaoExisteException();
-		};
-	}
-	
-	public String getAtributoAluguel(String aluguel, String atributo) throws Exception{
-		Aluguel rent = repo.getAluguel(aluguel);
-		return switch (atributo) {
-			case "estado" -> rent.getEstado();
-			case "usuario" -> rent.getUsuario();
-			case "bicicleta" -> rent.getBicicleta();
-			case "estacaoOrigem" -> rent.getEstacaoOrigem();
-			case "inicio" -> Formatador.dateToString(rent.getInicio());
-			case "valorCobrado" -> Formatador.doubleToString(rent.getValorCobrado());
-			case "fim" -> Formatador.dateToString(rent.getFim());
-			case "estacaoDestino" -> rent.getEstacaoDestino();
-			default -> throw new AtributoNaoExisteException();
-		};
 	}
 }
