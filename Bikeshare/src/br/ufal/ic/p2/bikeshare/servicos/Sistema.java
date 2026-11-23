@@ -42,9 +42,15 @@ public class Sistema {
 		repo.removerBicicleta(estacao, bicicleta);
 	}
 	
+	public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) throws Exception{
+		return repo.retirarBicicleta(usuario, estacao, bicicleta, data);
+	}
+	
 	public void zerarSistema() {
 		repo.zerarSistema();
 	}
+	
+	
 	
 	/////////////
 	//Não alteram o sistema
@@ -70,6 +76,10 @@ public class Sistema {
 	
 	public String getEstadoBicicleta(String bicicleta) throws Exception {
 		return consultaEstacoes.getAtributoBicicleta(bicicleta, "estado");
+	}
+	
+	public String getAtributoAluguel(String aluguel, String atributo) throws Exception {
+		return consultaEstacoes.getAtributoAluguel(aluguel, atributo);
 	}
 	
 	public void encerrarSistema() {

@@ -10,8 +10,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
 import java.beans.XMLDecoder;
 
+import br.ufal.ic.p2.bikeshare.exception.AluguelNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.BicicleNaoEstaNaEstacaoException;
 import br.ufal.ic.p2.bikeshare.exception.BicicletaJaExisteException;
 import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoExisteException;
@@ -19,6 +24,7 @@ import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
 import br.ufal.ic.p2.bikeshare.exception.EstacaoNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.UsuarioNaoExisteException;
+import br.ufal.ic.p2.bikeshare.models.Aluguel;
 import br.ufal.ic.p2.bikeshare.models.Estacao;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
 import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
@@ -28,32 +34,41 @@ public class Repositorio {
 	private static final File ARQUIVO_USUARIOS = new File("XML/usuarios.xml");
 	private static final File ARQUIVO_ESTACOES = new File("/XML/estacoes.xml");
 	private static final File ARQUIVO_BICICLETAS = new File("/XML/bicicletas.xml");
+	private static final File ARQUIVO_ALUGUEIS = new File("/XML/algueis.xml");
 	private static final File ARQUIVO_ID_USUARIOS = new File("XML/id_usuarios.xml");
 	private static final File ARQUIVO_ID_ESTACOES = new File("XML/id_estacoes.xml");
+	private static final File ARQUIVO_ID_ALUGUEIS = new File("/XML/id_algueis.xml");
 	
 	private Map<String, Usuario> usuarios;
 	private Map<String, Estacao> estacoes;
 	private Map<String, Bicicleta> bicicletas;
+	private Map<String, Aluguel> alugueis;
 	private int id_atual_usuarios;	//para retornar o id de um novo usuário a partir do mais novo
 	private int id_atual_estacoes;
+	private int id_atual_alugueis;
 	
 	public Repositorio() {
 		usuarios = carregar(ARQUIVO_USUARIOS, new LinkedHashMap<>());
 		estacoes = carregar(ARQUIVO_ESTACOES, new LinkedHashMap<>());
 		bicicletas = carregar(ARQUIVO_BICICLETAS, new LinkedHashMap<>());
+		alugueis = carregar(ARQUIVO_ALUGUEIS, new LinkedHashMap<>());
 		id_atual_usuarios = carregar(ARQUIVO_ID_USUARIOS, 1);
 		id_atual_estacoes = carregar(ARQUIVO_ID_ESTACOES, 1);
+		id_atual_alugueis = carregar(ARQUIVO_ID_ALUGUEIS, 1);
 	}
 	
 	public void salvar()  {
 		gravar(ARQUIVO_USUARIOS, usuarios);
 		gravar(ARQUIVO_ESTACOES, estacoes);
 		gravar(ARQUIVO_BICICLETAS, bicicletas);
+		gravar(ARQUIVO_ALUGUEIS, alugueis);
 		gravar(ARQUIVO_ID_USUARIOS, id_atual_usuarios);
 		gravar(ARQUIVO_ID_ESTACOES, id_atual_estacoes);
+		gravar(ARQUIVO_ID_ALUGUEIS, id_atual_alugueis);
 	}
 
-	public void removerBicicleta(String estacao, String bicicleta) throws Exception {
+	//Faz verificações com a estação e a bicicleta em sei e depois a relação entre elas.
+	private void verificarBicicletaEstacao(String estacao, String bicicleta) throws Exception {
 		Validador.idEstacao(estacao);
 		Validador.idBicicleta(bicicleta);
 		
@@ -63,9 +78,30 @@ public class Repositorio {
 			throw new BicicletaNaoExisteException();
 		if(!bicicletas.get(bicicleta).getEstacao().equals(estacao))
 			throw new BicicleNaoEstaNaEstacaoException();
+	}
+	
+	public void removerBicicleta(String estacao, String bicicleta) throws Exception {
+		verificarBicicletaEstacao(estacao, bicicleta);
 		
 		estacoes.get(estacao).removerBicicleta(bicicleta);
 		bicicletas.remove(bicicleta);
+	}
+	
+	public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) throws Exception {
+		verificarBicicletaEstacao(estacao, bicicleta);
+		Usuario user = getUsuario(usuario);
+		Bicicleta bike = getBicicleta(bicicleta);
+		Estacao station = getEstacao(estacao);
+		
+		String id_aluguel = adicionarAluguel(new Aluguel(usuario, estacao, bicicleta, data));
+		
+		user.setBicicleta(bicicleta);
+		user.setAluguelAtivo(id_aluguel);
+		bike.setEstado("emUso");
+		bike.setEstacao("nenhuma");
+		station.removerBicicleta(bicicleta);
+		
+		return id_aluguel;
 	}
 	
 	public void removerUsuario(String usuario) throws Exception{
@@ -76,6 +112,7 @@ public class Repositorio {
 		usuarios.remove(usuario);
 	}
 	
+	
 	//Guarda um elemento no repositorio para o novo maior ID
 	private <T> String adicionar(Map<String, T> lista, String prefixo, T elemento, int id) {
 		String id_s = prefixo + id;
@@ -83,6 +120,9 @@ public class Repositorio {
 		return id_s;
 	}
 	
+	public String adicionarAluguel(Aluguel aluguel) {
+		return adicionar(alugueis, "A", aluguel, id_atual_alugueis++);
+	}
 	
 	public String adicionarUsuario(Usuario usuario) {
 		return adicionar(usuarios, "U", usuario, id_atual_usuarios++);
@@ -127,6 +167,11 @@ public class Repositorio {
 		return getElemento(bicicletas, key, BicicletaNaoExisteException::new);
 	}
 	
+	public Aluguel getAluguel(String key) throws Exception {
+		Validador.idAluguel(key);
+		return getElemento(alugueis, key, AluguelNaoExisteException::new);
+	}
+	
 	//Dá uma cópia dos usuários
 	public Map<String, Usuario> getListaUsuarios() {
 		return new LinkedHashMap<String, Usuario>(usuarios);
@@ -140,8 +185,10 @@ public class Repositorio {
 		usuarios.clear();
 		estacoes.clear();
 		bicicletas.clear();
+		alugueis.clear();
 		id_atual_usuarios = 1;
 		id_atual_estacoes = 1;
+		id_atual_alugueis = 1;
 	}
 	
 	
@@ -162,6 +209,13 @@ public class Repositorio {
 		arquivo.getParentFile().mkdirs();
 		try (XMLEncoder e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(arquivo)))) {
 			e.setExceptionListener(ex -> System.err.println("Erro no XMLEncoder: " + ex));
+			e.setPersistenceDelegate(LocalDateTime.class, new PersistenceDelegate() {
+			    @Override
+			    protected Expression instantiate(Object oldInstance, Encoder out) {
+			        return new Expression(oldInstance, LocalDateTime.class, "parse",
+			                new Object[]{ oldInstance.toString() });
+			    }
+			});
 			e.writeObject(conteudo);
 		} catch (IOException e) {
 			throw new ErroSalvarException(e);

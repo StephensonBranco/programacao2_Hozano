@@ -19,6 +19,7 @@ public abstract class Usuario {
 	private Cartao cartao;
 	private String chavePix;
 	private Double saldo;
+	private String bicicleta;
 	
 	public Usuario() {
 		
@@ -38,6 +39,7 @@ public abstract class Usuario {
 		setCartao(null);
 		setChavePix(null);
 		setSaldo(0.00);
+		setBicicleta(null);
 	}
 	
 	public String getNome() {
@@ -166,5 +168,13 @@ public abstract class Usuario {
 	public void setSaldo(String saldo) throws Exception {
 		Validador.saldo(saldo);
 		this.saldo = Formatador.stringToDouble(saldo) + this.saldo;
+	}
+
+	public String getBicicleta() {
+		return bicicleta;
+	}
+
+	public void setBicicleta(String bicicleta) {
+		this.bicicleta = bicicleta;
 	}
 }
