@@ -1,5 +1,6 @@
 package br.ufal.ic.p2.bikeshare.models.usuario;
 
+import br.ufal.ic.p2.bikeshare.exception.UsuarioJaPossuiAluguelException;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Formatador;
 import br.ufal.ic.p2.bikeshare.util.Validador;
@@ -19,6 +20,7 @@ public abstract class Usuario {
 	private Cartao cartao;
 	private String chavePix;
 	private Double saldo;
+	private String bicicleta;
 	
 	public Usuario() {
 		
@@ -38,6 +40,7 @@ public abstract class Usuario {
 		setCartao(null);
 		setChavePix(null);
 		setSaldo(0.00);
+		setBicicleta(null);
 	}
 	
 	public String getNome() {
@@ -125,7 +128,7 @@ public abstract class Usuario {
 		return aluguelAtivo;
 	}
 
-	public void setAluguelAtivo(String aluguelAtivo) {
+	public void setAluguelAtivo(String aluguelAtivo) throws UsuarioJaPossuiAluguelException {
 		this.aluguelAtivo = aluguelAtivo;
 	}
 
@@ -166,5 +169,13 @@ public abstract class Usuario {
 	public void setSaldo(String saldo) throws Exception {
 		Validador.saldo(saldo);
 		this.saldo = Formatador.stringToDouble(saldo) + this.saldo;
+	}
+
+	public String getBicicleta() {
+		return bicicleta;
+	}
+
+	public void setBicicleta(String bicicleta) {
+		this.bicicleta = bicicleta;
 	}
 }

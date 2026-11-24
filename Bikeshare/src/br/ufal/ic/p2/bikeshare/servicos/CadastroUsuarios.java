@@ -12,13 +12,14 @@ import br.ufal.ic.p2.bikeshare.exception.TipoInvalidoException;
 import br.ufal.ic.p2.bikeshare.models.usuario.PessoaFisica;
 import br.ufal.ic.p2.bikeshare.models.usuario.PessoaJuridica;
 import br.ufal.ic.p2.bikeshare.models.usuario.Usuario;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioUsuarios;
 import br.ufal.ic.p2.bikeshare.models.Cartao;
 import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class CadastroUsuarios {
-	private final Repositorio repo;
-	public CadastroUsuarios(Repositorio repo) {
-		this.repo = repo;
+	private final RepositorioUsuarios repoUsuarios;
+	public CadastroUsuarios(RepositorioUsuarios repoUsuarios) {
+		this.repoUsuarios = repoUsuarios;
 	}
 	
 	public String criarUsuario(String nome, String email, String senha, String tipo, String cadastro,
@@ -31,7 +32,7 @@ public class CadastroUsuarios {
 			plano = "avulso";
 		
 		//procurando tipos repetidos
-		Validador.emailRepetido(repo.getListaUsuarios(), email);
+		Validador.emailRepetido(repoUsuarios.getLista(), email);
 		
 		switch (tipo) {
 			case "pessoaFisica":
@@ -46,7 +47,7 @@ public class CadastroUsuarios {
 				throw new TipoInvalidoException();
 		}
 		
-		String id = repo.adicionarUsuario(usuario);
+		String id = repoUsuarios.adicionar(usuario);
 		return id;
 	}
 	
@@ -55,7 +56,7 @@ public class CadastroUsuarios {
 	//s1 = metodoPagamento; s2 = numero; s3 = validade
 	
 	public void alterarUsuario(String usuario, String atributo, String valor) throws Exception {
-		Usuario user = repo.getUsuario(usuario);
+		Usuario user = repoUsuarios.get(usuario);
 		switch (atributo) {
 			case "nome" -> {
 				user.setNome(valor);
@@ -64,7 +65,7 @@ public class CadastroUsuarios {
 			case "email" -> {
 				//Usuario pode alterar para o mesmo email, precisando checar se o email repetido nos usuários não é o dele
 				
-				Map<String, Usuario> usuarios= repo.getListaUsuarios();
+				Map<String, Usuario> usuarios= repoUsuarios.getLista();
 				try {
 					Validador.emailRepetido(usuarios, valor);
 					user.setEmail(valor);
@@ -107,7 +108,7 @@ public class CadastroUsuarios {
 	
 	//valor = chavePix ou Saldo
 	public void alterarUsuario(String usuario, String atributo, String metodoPagamento, String valor) throws Exception {
-		Usuario user = repo.getUsuario(usuario);
+		Usuario user = repoUsuarios.get(usuario);
 		switch (atributo) {
 			case "metodoPagamento" -> {
 				if("pix".equals(metodoPagamento)) {
@@ -129,7 +130,7 @@ public class CadastroUsuarios {
  	}
 	
 	public void alterarUsuario(String usuario, String atributo, String metodoPagamento, String numeroCartao, String validadeCartao) throws Exception {
-		Usuario user = repo.getUsuario(usuario);
+		Usuario user = repoUsuarios.get(usuario);
 		switch (atributo) {
 			case "metodoPagamento" -> {
 				if("cartao".equals(metodoPagamento)) {

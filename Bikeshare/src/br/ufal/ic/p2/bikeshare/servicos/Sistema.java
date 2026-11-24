@@ -1,11 +1,24 @@
 package br.ufal.ic.p2.bikeshare.servicos;
 
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioAlugueis;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioBicicletas;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioEstacoes;
+import br.ufal.ic.p2.bikeshare.repositorio.RepositorioUsuarios;
+
 public class Sistema {
-	private final Repositorio repo = new Repositorio();
-	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repo);
-	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repo);
-	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repo);
-	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repo);
+	private final RepositorioUsuarios repoUsuarios = new RepositorioUsuarios();
+	private final RepositorioEstacoes repoEstacoes = new RepositorioEstacoes();
+	private final RepositorioBicicletas repoBicicletas= new RepositorioBicicletas(repoEstacoes);
+	private final RepositorioAlugueis repoAlugueis= new RepositorioAlugueis();
+
+	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repoUsuarios);
+	private final CadastroBicicletas cadastroBicicletas = new CadastroBicicletas(repoBicicletas);
+	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repoEstacoes);
+	private final CadastroAlugueis cadastroAlugueis = new CadastroAlugueis(repoUsuarios, repoBicicletas, repoAlugueis);
+	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repoUsuarios);
+	private final ConsultaBicicletas consultaBicicletas = new ConsultaBicicletas(repoBicicletas);
+	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repoEstacoes, repoBicicletas);
+	private final ConsultaAlugueis consultaAlugueis  = new ConsultaAlugueis(repoAlugueis);
 	
 	/////////////
 	///Alteram o sistema
@@ -27,7 +40,7 @@ public class Sistema {
 	}
 	
 	public void removerUsuario(String usuario) throws Exception {
-		repo.removerUsuario(usuario);
+		repoUsuarios.remover(usuario);
 	}
 	
 	public String criarEstacao(String nome, String endereco, String capacidade) throws Exception {
@@ -35,21 +48,30 @@ public class Sistema {
 	}
 	
 	public void adicionarBicicleta(String estacao, String bicicleta, String tipo, String nivelBateria) throws Exception {
-		cadastroEstacoes.criarBicicleta(estacao, bicicleta, tipo, nivelBateria);
+		cadastroBicicletas.criarBicicleta(estacao, bicicleta, tipo, nivelBateria);
 	}
 	
 	public void removerBicicleta(String estacao, String bicicleta) throws Exception{
-		repo.removerBicicleta(estacao, bicicleta);
+		repoBicicletas.remover(estacao, bicicleta);
+	}
+	
+	public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) throws Exception{
+		return cadastroAlugueis.criarAluguel(usuario, estacao, bicicleta, data);	//Quando retira uma bicicleta, está fazendo um aluguel
 	}
 	
 	public void zerarSistema() {
-		repo.zerarSistema();
+		repoUsuarios.zerar();
+		repoEstacoes.zerar();
+		repoBicicletas.zerar();
+		repoAlugueis.zerar();
 	}
+	
+	
 	
 	/////////////
 	//Não alteram o sistema
 	public String getAtributoUsuario(String Usuario, String atributo) throws Exception{
-		return consultaUsuarios.getAtributoUsuario(Usuario, atributo);
+		return consultaUsuarios.getAtributo(Usuario, atributo);
 	}
 	
 	public String getUsuarioPorEmail(String email) throws Exception{
@@ -65,14 +87,21 @@ public class Sistema {
 	}
 	
 	public String getAtributoBicicleta(String bicicleta, String atributo) throws Exception {
-		return consultaEstacoes.getAtributoBicicleta(bicicleta, atributo);
+		return consultaBicicletas.getAtributo(bicicleta, atributo);
 	}
 	
 	public String getEstadoBicicleta(String bicicleta) throws Exception {
-		return consultaEstacoes.getAtributoBicicleta(bicicleta, "estado");
+		return consultaBicicletas.getAtributo(bicicleta, "estado");
+	}
+	
+	public String getAtributoAluguel(String aluguel, String atributo) throws Exception {
+		return consultaAlugueis.getAtributo(aluguel, atributo);
 	}
 	
 	public void encerrarSistema() {
-		repo.salvar();
+		repoUsuarios.salvar();
+		repoEstacoes.salvar();
+		repoBicicletas.salvar();
+		repoAlugueis.salvar();
 	}
 }

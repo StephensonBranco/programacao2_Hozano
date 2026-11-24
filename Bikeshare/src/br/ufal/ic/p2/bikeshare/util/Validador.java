@@ -11,10 +11,12 @@ import br.ufal.ic.p2.bikeshare.exception.CapacidadeNulaException;
 import br.ufal.ic.p2.bikeshare.exception.ChavePixNulaException;
 import br.ufal.ic.p2.bikeshare.exception.CnpjNuloException;
 import br.ufal.ic.p2.bikeshare.exception.CpfNuloException;
+import br.ufal.ic.p2.bikeshare.exception.DataNulaException;
 import br.ufal.ic.p2.bikeshare.exception.EmailInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailJaCadastradoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailNuloException;
 import br.ufal.ic.p2.bikeshare.exception.EnderecoNuloException;
+import br.ufal.ic.p2.bikeshare.exception.IdentificacaoAluguelNulaException;
 import br.ufal.ic.p2.bikeshare.exception.IdentificacaoBicicletaNulaException;
 import br.ufal.ic.p2.bikeshare.exception.IdentificacaoEstacaoNulaException;
 import br.ufal.ic.p2.bikeshare.exception.IdentificacaoUsuarioNulaException;
@@ -212,11 +214,19 @@ public class Validador {
 		Validador.nulo(id, IdentificacaoBicicletaNulaException::new);
 	}
 	
+	public static void idAluguel(String id) throws Exception{
+		Validador.nulo(id, IdentificacaoAluguelNulaException::new);
+	}
+	
 	public static void nivelBateria(String nivelBateria) throws Exception {
 		Validador.nulo(nivelBateria, NivelBateriaNuloException::new);
 		Validador.numericoNaoNegativoInteiro(nivelBateria, NivelBateriaNaoNumericoException::new, NivelBateriaForaDosLimitesException::new);
 		if(Integer.parseInt(nivelBateria) > 100)
 			throw new NivelBateriaForaDosLimitesException();
+	}
+	
+	public static void data(String data) throws Exception {
+		Validador.nulo(data, DataNulaException::new);
 	}
 	
 	public static void pessoaFisica(Usuario usuario) throws Exception{

@@ -116,8 +116,8 @@ public class Facade {
     // US8 - Retirada de bicicleta
     // =====================================================================
 
-    public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) throws Exception{
+        return sistema.retirarBicicleta(usuario, estacao, bicicleta, data);
     }
 
     // =====================================================================
@@ -140,8 +140,8 @@ public class Facade {
         throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
     }
 
-    public String getAtributoAluguel(String aluguel, String atributo) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public String getAtributoAluguel(String aluguel, String atributo) throws Exception {
+    	return sistema.getAtributoAluguel(aluguel, atributo);
     }
 
     // =====================================================================
