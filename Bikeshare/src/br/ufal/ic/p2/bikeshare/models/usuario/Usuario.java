@@ -43,6 +43,10 @@ public abstract class Usuario {
 		setBicicleta(null);
 	}
 	
+	public void removerSaldo(Double valor) {	
+		this.saldo = this.saldo - valor;
+	}
+	
 	public String getNome() {
 		return nome;
 	}

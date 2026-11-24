@@ -124,8 +124,8 @@ public class Facade {
     // US9 - Devolucao de bicicleta
     // =====================================================================
 
-    public void devolverBicicleta(String aluguel, String estacao, String data) {
-        throw new UnsupportedOperationException(AINDA_NAO_IMPLEMENTADO);
+    public void devolverBicicleta(String aluguel, String estacao, String data) throws Exception {
+        sistema.devolverBicicleta(aluguel, estacao, data);
     }
 
     // =====================================================================

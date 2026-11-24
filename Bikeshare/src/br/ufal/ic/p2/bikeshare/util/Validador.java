@@ -2,6 +2,7 @@ package br.ufal.ic.p2.bikeshare.util;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoPossuiBateriaException;
@@ -12,6 +13,7 @@ import br.ufal.ic.p2.bikeshare.exception.ChavePixNulaException;
 import br.ufal.ic.p2.bikeshare.exception.CnpjNuloException;
 import br.ufal.ic.p2.bikeshare.exception.CpfNuloException;
 import br.ufal.ic.p2.bikeshare.exception.DataNulaException;
+import br.ufal.ic.p2.bikeshare.exception.DevolucaoAntesException;
 import br.ufal.ic.p2.bikeshare.exception.EmailInvalidoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailJaCadastradoException;
 import br.ufal.ic.p2.bikeshare.exception.EmailNuloException;
@@ -242,5 +244,10 @@ public class Validador {
 	public static void eletrica(Bicicleta bicicleta) throws Exception {
 		if(!bicicleta.getTipo().equals("eletrica"))
 			throw new BicicletaNaoPossuiBateriaException();
+	}
+	
+	public static void dataEmOrdem(LocalDateTime inicio, LocalDateTime fim) throws DevolucaoAntesException {
+		if(inicio.isAfter(fim))
+			throw new DevolucaoAntesException();
 	}
 }
