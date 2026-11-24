@@ -6,7 +6,6 @@ import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Convencional;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Eletrica;
 import br.ufal.ic.p2.bikeshare.repositorio.RepositorioBicicletas;
-import br.ufal.ic.p2.bikeshare.repositorio.RepositorioEstacoes;
 
 public class CadastroBicicletas {
 	private final RepositorioBicicletas repoBicicletas;

@@ -20,7 +20,6 @@ public class RepositorioEstacoes implements Repositorio<Estacao> {
 		id_atual_estacoes = FRepo.carregar(ARQUIVO_ID_ESTACOES, 1);
 	}
 	
-	
 	@Override
 	public void zerar() {
 		estacoes.clear();

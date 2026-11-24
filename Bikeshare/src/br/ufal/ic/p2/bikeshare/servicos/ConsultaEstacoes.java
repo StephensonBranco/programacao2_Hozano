@@ -1,14 +1,8 @@
 package br.ufal.ic.p2.bikeshare.servicos;
 
-import br.ufal.ic.p2.bikeshare.exception.AtributoNaoExisteException;
-import br.ufal.ic.p2.bikeshare.models.Aluguel;
 import br.ufal.ic.p2.bikeshare.models.Estacao;
-import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
-import br.ufal.ic.p2.bikeshare.models.bicicleta.Eletrica;
 import br.ufal.ic.p2.bikeshare.repositorio.RepositorioBicicletas;
 import br.ufal.ic.p2.bikeshare.repositorio.RepositorioEstacoes;
-import br.ufal.ic.p2.bikeshare.util.Formatador;
-import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class ConsultaEstacoes {
 	private final RepositorioEstacoes repoEstacoes;

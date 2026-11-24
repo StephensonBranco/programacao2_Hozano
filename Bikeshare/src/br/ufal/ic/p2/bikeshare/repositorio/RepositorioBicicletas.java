@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import br.ufal.ic.p2.bikeshare.exception.BicicleNaoEstaNaEstacaoException;
 import br.ufal.ic.p2.bikeshare.exception.BicicletaJaExisteException;
 import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoExisteException;
+import br.ufal.ic.p2.bikeshare.exception.EstacaoNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Estacao;
 import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
 import br.ufal.ic.p2.bikeshare.util.Validador;
@@ -35,10 +37,22 @@ public class RepositorioBicicletas{
 		return FRepo.get(bicicletas, bicicleta, BicicletaNaoExisteException::new);
 	}
 	
-	public void removerBicicletaDaEstacao(String estacao, String bicicleta) throws Exception {
+	public void verificarBicicletaEstacao(String estacao, String bicicleta) throws Exception {
+		Validador.idEstacao(estacao);
+		Validador.idBicicleta(bicicleta);
 		Map<String, Estacao> estacoes = repoEstacoes.getLista();
-		FRepo.verificarBicicletaEstacao(estacoes, bicicletas, estacao, bicicleta);
-		estacoes.get(estacao).removerBicicleta(bicicleta);
+		
+		if(!estacoes.containsKey(estacao))
+			throw new EstacaoNaoExisteException();
+		if(!bicicletas.containsKey(bicicleta))
+			throw new BicicletaNaoExisteException();
+		if(!bicicletas.get(bicicleta).getEstacao().equals(estacao))
+			throw new BicicleNaoEstaNaEstacaoException();
+	}
+	
+	public void removerBicicletaDaEstacao(String estacao, String bicicleta) throws Exception {
+		verificarBicicletaEstacao(estacao, bicicleta);
+		repoEstacoes.getLista().get(estacao).removerBicicleta(bicicleta);
 	}
 	
 	public void remover(String estacao, String bicicleta) throws Exception {
@@ -53,5 +67,9 @@ public class RepositorioBicicletas{
 			throw new BicicletaJaExisteException();
 		station.adicionarBicicleta(id);
 		bicicletas.put(id, bicicleta);
+	}
+	
+	public Map<String, Bicicleta> getLista() {
+		return new LinkedHashMap<String, Bicicleta>(bicicletas);
 	}
 }

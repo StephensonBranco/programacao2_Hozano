@@ -1,5 +1,6 @@
 package br.ufal.ic.p2.bikeshare.servicos;
 
+import br.ufal.ic.p2.bikeshare.exception.AluguelEmAndamentoException;
 import br.ufal.ic.p2.bikeshare.exception.AtributoNaoExisteException;
 import br.ufal.ic.p2.bikeshare.models.Aluguel;
 import br.ufal.ic.p2.bikeshare.repositorio.RepositorioAlugueis;
@@ -12,6 +13,11 @@ public class ConsultaAlugueis {
 		this.repoAlugueis = repoAlugueis;
 	}
 	
+	private void verificarEmAndamento(Aluguel aluguel) throws AluguelEmAndamentoException {
+		if("emAndamento".equals(aluguel.getEstado()))
+			throw new AluguelEmAndamentoException();	
+	}
+	
 	public String getAtributo(String aluguel, String atributo) throws Exception{
 		Aluguel rent = repoAlugueis.get(aluguel);
 		return switch (atributo) {
@@ -20,9 +26,18 @@ public class ConsultaAlugueis {
 			case "bicicleta" -> rent.getBicicleta();
 			case "estacaoOrigem" -> rent.getEstacaoOrigem();
 			case "inicio" -> Formatador.dateToString(rent.getInicio());
-			case "valorCobrado" -> Formatador.doubleToString(rent.getValorCobrado());
-			case "fim" -> Formatador.dateToString(rent.getFim());
-			case "estacaoDestino" -> rent.getEstacaoDestino();
+			case "valorCobrado" -> {
+				verificarEmAndamento(rent);
+				yield Formatador.doubleToString(rent.getValorCobrado());
+			}
+			case "fim" -> {
+				verificarEmAndamento(rent);
+				yield Formatador.dateToString(rent.getFim());
+			}
+			case "estacaoDestino" -> {
+				verificarEmAndamento(rent);
+				yield rent.getEstacaoDestino();
+			}
 			default -> throw new AtributoNaoExisteException();
 		};
 	}

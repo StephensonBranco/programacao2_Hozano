@@ -40,7 +40,7 @@ public class RepositorioUsuarios implements Repositorio<Usuario>{
 		Validador.idUsuario(usuario);
 		if(!usuarios.containsKey(usuario))
 			throw new UsuarioNaoExisteException();
-		else if(usuarios.get(usuario).getAluguelAtivo() != null)
+		else if(!"nenhum".equals(usuarios.get(usuario).getAluguelAtivo()))
 			throw new UsuarioComAluguelAtivoException();
 		usuarios.remove(usuario);
 	}

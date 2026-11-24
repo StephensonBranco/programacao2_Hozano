@@ -78,8 +78,6 @@ public class Aluguel {
 	}
 
 	public String getEstacaoDestino() throws AluguelEmAndamentoException {
-		if("emAndamento".equals(estado))
-			throw new AluguelEmAndamentoException();
 		return estacaoDestino;
 	}
 
@@ -88,8 +86,6 @@ public class Aluguel {
 	}
 
 	public LocalDateTime getFim() throws AluguelEmAndamentoException {
-		if("emAndamento".equals(estado))
-			throw new AluguelEmAndamentoException();
 		return fim;
 	}
 
@@ -104,8 +100,6 @@ public class Aluguel {
 	}
 
 	public Double getValorCobrado() throws AluguelEmAndamentoException {
-		if("emAndamento".equals(estado))
-			throw new AluguelEmAndamentoException();
 		return valorCobrado;
 	}
 

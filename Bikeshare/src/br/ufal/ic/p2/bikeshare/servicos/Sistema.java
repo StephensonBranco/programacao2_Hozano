@@ -9,7 +9,7 @@ public class Sistema {
 	private final RepositorioUsuarios repoUsuarios = new RepositorioUsuarios();
 	private final RepositorioEstacoes repoEstacoes = new RepositorioEstacoes();
 	private final RepositorioBicicletas repoBicicletas= new RepositorioBicicletas(repoEstacoes);
-	private final RepositorioAlugueis repoAlugueis= new RepositorioAlugueis(repoUsuarios, repoBicicletas);
+	private final RepositorioAlugueis repoAlugueis= new RepositorioAlugueis();
 
 	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repoUsuarios);
 	private final CadastroBicicletas cadastroBicicletas = new CadastroBicicletas(repoBicicletas);

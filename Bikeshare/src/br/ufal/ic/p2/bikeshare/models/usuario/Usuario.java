@@ -129,8 +129,6 @@ public abstract class Usuario {
 	}
 
 	public void setAluguelAtivo(String aluguelAtivo) throws UsuarioJaPossuiAluguelException {
-		if(this.aluguelAtivo != null & !"nenhum".equals(this.aluguelAtivo))
-			throw new UsuarioJaPossuiAluguelException();
 		this.aluguelAtivo = aluguelAtivo;
 	}
 

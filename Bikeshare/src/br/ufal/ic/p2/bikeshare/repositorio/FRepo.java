@@ -15,30 +15,12 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import br.ufal.ic.p2.bikeshare.exception.BicicleNaoEstaNaEstacaoException;
-import br.ufal.ic.p2.bikeshare.exception.BicicletaNaoExisteException;
 import br.ufal.ic.p2.bikeshare.exception.ErroCarregarException;
 import br.ufal.ic.p2.bikeshare.exception.ErroSalvarException;
-import br.ufal.ic.p2.bikeshare.exception.EstacaoNaoExisteException;
-import br.ufal.ic.p2.bikeshare.models.Estacao;
-import br.ufal.ic.p2.bikeshare.models.bicicleta.Bicicleta;
-import br.ufal.ic.p2.bikeshare.util.Validador;
 
 public class FRepo {
 	public FRepo() {
 		
-	}
-	
-	public static void verificarBicicletaEstacao(Map<String, Estacao> estacoes, Map<String, Bicicleta> bicicletas, String estacao, String bicicleta) throws Exception {
-		Validador.idEstacao(estacao);
-		Validador.idBicicleta(bicicleta);
-		
-		if(!estacoes.containsKey(estacao))
-			throw new EstacaoNaoExisteException();
-		if(!bicicletas.containsKey(bicicleta))
-			throw new BicicletaNaoExisteException();
-		if(!bicicletas.get(bicicleta).getEstacao().equals(estacao))
-			throw new BicicleNaoEstaNaEstacaoException();
 	}
 	
 	//Adicionar um elemento à lista enviada
