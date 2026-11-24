@@ -11,14 +11,14 @@ public class Sistema {
 	private final RepositorioBicicletas repoBicicletas= new RepositorioBicicletas(repoEstacoes);
 	private final RepositorioAlugueis repoAlugueis= new RepositorioAlugueis();
 
-	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repoUsuarios);
-	private final CadastroBicicletas cadastroBicicletas = new CadastroBicicletas(repoBicicletas);
-	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repoEstacoes);
-	private final CadastroAlugueis cadastroAlugueis = new CadastroAlugueis(repoUsuarios, repoBicicletas, repoAlugueis);
 	private final ConsultaUsuarios consultaUsuarios = new ConsultaUsuarios(repoUsuarios);
 	private final ConsultaBicicletas consultaBicicletas = new ConsultaBicicletas(repoBicicletas);
 	private final ConsultaEstacoes consultaEstacoes  = new ConsultaEstacoes(repoEstacoes, repoBicicletas);
 	private final ConsultaAlugueis consultaAlugueis  = new ConsultaAlugueis(repoAlugueis);
+	private final CadastroUsuarios cadastroUsuarios = new CadastroUsuarios(repoUsuarios);
+	private final CadastroBicicletas cadastroBicicletas = new CadastroBicicletas(repoBicicletas);
+	private final CadastroEstacoes cadastroEstacoes = new CadastroEstacoes(repoEstacoes);
+	private final CadastroAlugueis cadastroAlugueis = new CadastroAlugueis(repoUsuarios, repoEstacoes, repoBicicletas, repoAlugueis);
 	
 	/////////////
 	///Alteram o sistema
@@ -57,6 +57,10 @@ public class Sistema {
 	
 	public String retirarBicicleta(String usuario, String estacao, String bicicleta, String data) throws Exception{
 		return cadastroAlugueis.criarAluguel(usuario, estacao, bicicleta, data);	//Quando retira uma bicicleta, está fazendo um aluguel
+	}
+	
+	public void devolverBicicleta(String aluguel, String estacao, String data) throws Exception {
+		cadastroAlugueis.finalizarAluguel(aluguel, estacao, data);
 	}
 	
 	public void zerarSistema() {

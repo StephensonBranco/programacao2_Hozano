@@ -60,7 +60,6 @@ public class Aluguel {
 	}
 
 	public void setInicio(String inicio) throws Exception {
-		Validador.data(inicio);
 		this.inicio = Formatador.stringToDate(inicio);
 	}
 	
@@ -89,12 +88,6 @@ public class Aluguel {
 		return fim;
 	}
 
-	public void setFim(String fim) throws Exception {
-		Validador.data(fim);
-		this.fim = Formatador.stringToDate(fim);
-	}
-	
-	//XML
 	public void setFim(LocalDateTime fim) {
 		this.fim = fim;
 	}

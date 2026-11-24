@@ -27,10 +27,8 @@ public class Formatador {
 	}
 	
 	//Transformar String em Data
-	public static LocalDateTime stringToDate(String string) throws DataInvalidaException {
-		if(string == null || string.isEmpty()) {
-			return null;
-		}
+	public static LocalDateTime stringToDate(String string) throws Exception {
+		Validador.data(string);
 		try {
 			return LocalDateTime.parse(string, dtf);			
 		} catch (DateTimeParseException e) {
